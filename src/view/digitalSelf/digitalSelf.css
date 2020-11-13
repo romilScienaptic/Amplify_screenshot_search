@@ -1,0 +1,32 @@
+thead[class*="ant-table-thead"] th{
+    background-color:#0095d9;
+    color: white;
+    text-align: center;
+  }
+  tbody{
+    text-align: center;
+  }
+ .title1{
+    font-weight: 600;
+    color: #919191;
+ }
+  .filter-text{
+    margin-top:-3px;
+  }
+  .text-margin{
+    margin-left:20px;
+    margin-top:5px;
+  }
+  
+
+.ant-table-thead > tr > th, .ant-table-tbody > tr > td {
+  padding: 8px 8px !important;
+}
+.waring-promt{
+  color:rgb(90, 83, 83);
+}
+
+.icon-warning-sign{
+  color:#fa8130;
+  margin-right:2px;
+}
