@@ -304,7 +304,7 @@ class StockStatus extends React.Component {
                     <Col span={2} style={{marginLeft:"1em"}} ><DropDown placeholder={"Select market..."} data={this.state.dataMarket1} id="market" select={this.select} value={this.state.market} /></Col>
 
                     <Col span={1}><label className="title1" style={{marginLeft:"1.5em"}}>Country</label></Col>
-                    <Col span={2} style={{marginLeft:"2em"}} ><GetCountries placeholder={"Select country..."} data={this.state. marketDuplicate} id="country" select={this.select} value={this.state.country}  hasFeedback validateStatus="error"/></Col>
+                    <Col span={3} style={{marginLeft:"2em"}} ><Form.Item  validateStatus="error" help={"please choose Market"}><GetCountries placeholder={"Select country..."} data={this.state. marketDuplicate} id="country" select={this.select} value={this.state.country}  hasFeedback validateStatus="error"/></Form.Item></Col>
 
 
     {/* <Form.Item
