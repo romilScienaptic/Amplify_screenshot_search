@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Divider, Input, Table, Tooltip, Button, Modal, Form,Select } from 'antd';
+import { Row, Col, Divider, Input, Table, Tooltip, Button, Modal, Form, Select } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import "antd/dist/antd.css";
 import './StockStatus.css';
@@ -7,8 +7,9 @@ import axios from 'axios';
 import DropDown from '../../components/Dropdown/Dropdown';
 import DatePicker from '../../components/DatePicker/DatePicker';
 import GetCountries from '../../components/getCountries/GetCountries';
+import GetPartnerType from '../../components/getPartnerType/GetPartnerType';
 
-const {Option} = Select;
+const { Option } = Select;
 class StockStatus extends React.Component {
     constructor(props) {
         super(props);
@@ -19,19 +20,26 @@ class StockStatus extends React.Component {
             detailedPartnerId: '',
             mpnModel: '',
             market: '',
-            marketDuplicate:1,
+            marketDuplicate: 'undefined',
+            countryDuplicate: 'undefined',
             category: '',
             subCategory: '',
-            scrapeDate: '',
+            // scrapeDate: '',
+            scrapeStartDate: '',
+            scrapeEndDate: '',
             dataCategory1: [],
             dataSubCategory1: [],
             dataMarket1: [],
-            dataCountry1:[],
+            dataCountry1: [],
             screenshotUrl: '',
+            partnerType: '',
             dataReceivedFromBackend: [],
+            countryError: false,
+            partnerTypeError: false,
+            scrapeDateError:false,
             spin: false,
             higherRecordLength: false,
-            showImage:false,
+            showImage: false,
         };
 
         this.columns = [
@@ -40,30 +48,11 @@ class StockStatus extends React.Component {
                 dataIndex: 'screenshotUrl',
                 key: 'screenshotUrl',
                 render: (text) => {
-                if(text!=" " && text!=null)
-                return <label style={{ cursor: "pointer", color: "#0095d9" }}>Click Here</label>
-                else
-                return <label>Screenshot not available</label>
-            }
-            },
-
-            {
-                title: "MPN Model",
-                dataIndex: 'mpnModel',
-                key: 'mpnModel',
-                // width: 80,
-            },
-            {
-                title: "Master Partner Id",
-                dataIndex: 'masterPartnerId',
-                key: 'masterPartnerId',
-                // width: 80,
-            },
-            {
-                title: "Partner Name",
-                dataIndex: 'partnerName',
-                key: 'partnerName',
-                // width: 80,
+                    if (text != " " && text != null)
+                        return <label style={{ cursor: "pointer", color: "#0095d9" }}>Click Here</label>
+                    else
+                        return <label>Screenshot not available</label>
+                }
             },
 
             {
@@ -79,6 +68,30 @@ class StockStatus extends React.Component {
                 // width: 80,
             },
             {
+                title: "Partner Type",
+                dataIndex: 'partnerType',
+                key: 'partnerType',
+                // width: 80,
+            },
+            {
+                title: "Partner Name",
+                dataIndex: 'partnerName',
+                key: 'partnerName',
+                // width: 80,
+            },
+            {
+                title: "MPN Model",
+                dataIndex: 'mpnModel',
+                key: 'mpnModel',
+                // width: 80,
+            },
+            // {
+            //     title: "Master Partner Id",
+            //     dataIndex: 'masterPartnerId',
+            //     key: 'masterPartnerId',
+            //     // width: 80,
+            // },
+            {
                 title: "Category",
                 dataIndex: 'category',
                 key: 'category',
@@ -90,12 +103,12 @@ class StockStatus extends React.Component {
                 key: 'subCategory',
                 // width: 80,
             },
-            {
-                title: "Detailed Partner Id",
-                dataIndex: 'detailedPartnerId',
-                key: 'detailedPartnerId',
-                // width: 80,
-            },
+            // {
+            //     title: "Detailed Partner Id",
+            //     dataIndex: 'detailedPartnerId',
+            //     key: 'detailedPartnerId',
+            //     // width: 80,
+            // },
             {
                 title: "Scrape Date",
                 dataIndex: 'scrapeDate',
@@ -106,7 +119,7 @@ class StockStatus extends React.Component {
     }
 
     componentDidMount() {
-        let dataCategory = [], dataSubCategory = [], dataMarket = [], dataCountry=[];
+        let dataCategory = [], dataSubCategory = [], dataMarket = [], dataCountry = [];
         axios.get(process.env.REACT_APP_DOMAIN + '/api/v1/stock_status/filter_data')
             .then(response => {
                 if (response.status === 200) {
@@ -126,8 +139,8 @@ class StockStatus extends React.Component {
                             dataMarket.push(val);
                         })
                     }
-                    if(response.data.country){
-                        response.data.country.map((val)=>{
+                    if (response.data.country) {
+                        response.data.country.map((val) => {
                             dataCountry.push(val);
                         })
                     }
@@ -139,7 +152,7 @@ class StockStatus extends React.Component {
                     dataCategory1: dataCategory,
                     dataSubCategory1: dataSubCategory,
                     dataMarket1: dataMarket,
-                    dataCountry1:dataCountry,
+                    dataCountry1: dataCountry,
                 })
             })
             .catch(err => err);
@@ -173,7 +186,11 @@ class StockStatus extends React.Component {
         if (id === "market") {
             this.setState({
                 market: value,
-                marketDuplicate:value,
+                marketDuplicate: value,
+                partnerType: '',
+                country: '',
+                countryDuplicate: 'undefined',
+                partnerTypeError: false,
             })
         }
         else if (id === "category") {
@@ -186,89 +203,124 @@ class StockStatus extends React.Component {
                 subCategory: value,
             })
         }
-        else if(id === "country"){
+        else if (id === "country") {
             this.setState({
-                country:value,
+                country: value,
+                countryDuplicate: value,
+                partnerType: '',
             })
         }
+        else if (id === "partnerType") {
+            this.setState({
+                partnerType: value,
+            })
+        }
+
     }
 
     refresh = () => {
         this.setState({
             country: '',
             partnerName: '',
+            partnerType: '',
             masterPartnerId: '',
             detailedPartnerId: '',
             mpnModel: '',
             market: '',
             category: '',
             subCategory: '',
-            scrapeDate: '',
+            //scrapeDate: '',
+            scrapeStartDate: '',
+            scrapeEndDate: '',
             dataReceivedFromBackend: '',
             spin: false,
             higherRecordLength: false,
+            countryError: false,
+            scrapeDateError:false,
+            partnerTypeError: false,
+            marketDuplicate: 'undefined',
+            countryDuplicate: 'undefined',
         })
     }
 
     showResult = () => {
-        this.setState({
-            spin: true,
-        })
-        const data = {
-            country: this.state.country,
-            partnerName: this.state.partnerName,
-            masterPartnerId: this.state.masterPartnerId,
-            detailedPartnerId: this.state.detailedPartnerId,
-            mpnModel: this.state.mpnModel,
-            market: this.state.market,
-            category: this.state.category,
-            subCategory: this.state.subCategory,
-            scrapeDate: this.state.scrapeDate,
+
+        if (this.state.scrapeStartDate == "" || this.state.scrapeEndDate == "") {
+                 this.setState({
+                    scrapeDateError:true,
+                 })
         }
-        let dataPacket = [];
-        return new Promise((resolve, reject) => {
-            axios.post(process.env.REACT_APP_DOMAIN + '/api/v1/digital_shelf/screenshot', data)
-                .then(response => {
-                     console.log("res", response)
-                    if (response.status === 200) {
-                        if (response.data.length <= 20) {
-                            response.data.map((data) => {
-                                dataPacket.push({
-                                    country: data.country,
-                                    partnerName: data.partnerName,
-                                    masterPartnerId: data.masterPartnerId,
-                                    detailedPartnerId: data.detailedPartnerId,
-                                    mpnModel: data.mpnModel,
-                                    market: data.market,
-                                    category: data.category,
-                                    subCategory: data.subCategory,
-                                    scrapeDate: data.scrapeDate,
-                                    screenshotUrl: data.screenshotUrl,
+        else {
+            this.setState({
+                spin: true,
+            })
+            const data = {
+                country: this.state.country,
+                partnerName: this.state.partnerName,
+                // masterPartnerId: this.state.masterPartnerId,
+                // detailedPartnerId: this.state.detailedPartnerId,
+                mpnModel: this.state.mpnModel,
+                market: this.state.market,
+                category: this.state.category,
+                subCategory: this.state.subCategory,
+                // scrapeDate: this.state.scrapeDate,
+                scrapeStartDate: this.state.scrapeStartDate,
+                scrapeEndDate: this.state.scrapeEndDate,
+                partnerType: this.state.partnerType,
+            }
+            let dataPacket = [];
+            return new Promise((resolve, reject) => {
+                axios.post(process.env.REACT_APP_DOMAIN + '/api/v1/stock_status/screenshot', data)
+                    .then(response => {
+                        console.log("res", response)
+                        if (response.status === 200) {
+                            if (response.data.length <= 20) {
+                                response.data.map((data) => {
+                                    dataPacket.push({
+                                        country: data.country,
+                                        partnerName: data.partnerName,
+                                        // masterPartnerId: data.masterPartnerId,
+                                        // detailedPartnerId: data.detailedPartnerId,
+                                        mpnModel: data.mpnModel,
+                                        market: data.market,
+                                        category: data.category,
+                                        subCategory: data.subCategory,
+                                        // scrapeDate: data.scrapeDate,
+                                        scrapeStartDate: data.scrapeStartDate,
+                                        scrapeEndDate: data.scrapeEndDate,
+                                        screenshotUrl: data.screenshotUrl,
+                                        partnerType: data.partnerType,
+                                    })
                                 })
-                            })
-                            this.setState({
-                                dataReceived: true,
-                                spin: false,
-                                dataReceivedFromBackend: dataPacket,
-                                higherRecordLength: false,
-                            })
+                                this.setState({
+                                    dataReceived: true,
+                                    spin: false,
+                                    dataReceivedFromBackend: dataPacket,
+                                    higherRecordLength: false,
+                                })
+                            }
+                            else {
+                                this.setState({
+                                    higherRecordLength: true,
+                                })
+                            }
                         }
-                        else {
-                            this.setState({
-                                higherRecordLength: true,
-                            })
-                        }
-                    }
-                })
-                .catch(err => err);
-        })
+                    })
+                    .catch(err => err);
+            })
+        }
     }
 
     dateSelect = (date, dateString, id) => {
         this.setState({
-            scrapeDate: dateString,
+            // scrapeDate: dateString,
+            scrapeStartDate: dateString[0],
+            scrapeEndDate: dateString[1],
+            scrapeDateError:false,
         })
+
     }
+
     handleOk = () => {
         this.setState({
             higherRecordLength: false,
@@ -281,46 +333,62 @@ class StockStatus extends React.Component {
     //     console.log("url->", link.screenshotUrl)
     // }
 
-    callImage=(record)=>{
+    callImage = (record) => {
         const w = window.open('about:blank');
         const image = new Image();
-        image.src = "data:image/jpg;base64," +record;
-        setTimeout(function(){
+        image.src = "data:image/jpg;base64," + record;
+        setTimeout(function () {
             w.document.write(image.outerHTML);
-        }, 0);     
+        }, 0);
     }
 
+    checkErrorForCountry = () => {
+        if (this.state.marketDuplicate === 'undefined') {
+            this.setState({
+                countryError: true,
+            })
+        }
+    }
+
+    checkErrorForPartnerType = () => {
+        if (this.state.countryDuplicate === 'undefined') {
+            this.setState({
+                partnerTypeError: true,
+            })
+        }
+    }
+
+    checkErrorForScrapeDate=()=>{
+        if(this.state.scrapeEndDate !="" && this.state.scrapeStartDate!=""){
+            this.setState({
+
+            })
+        }
+    }
     render() {
         return (
             <div style={{ marginLeft: "-7em" }}>
                 <Row>
                     <Col span={2}></Col>
                     <label className="title1">STOCK STATUS FILTERS</label>
+                    <Col span={22}></Col>
+                    <Col style={{ marginTop: "-2em" }}><Tooltip placement="right" title="Refresh"><span style={{ color: "#0095d9", fontSize: "15px", cursor: "pointer", marginLeft: "1em" }} onClick={this.refresh}>Clear All</span></Tooltip></Col>
                 </Row>
+
                 <Row style={{ marginTop: "1.5em" }}>
                     <Col span={2}></Col>
 
-                    <Col span={1}><label className="title1" style={{marginLeft:"1em"}}>Market</label></Col>
-                    <Col span={2} style={{marginLeft:"1em"}} ><DropDown placeholder={"Select market..."} data={this.state.dataMarket1} id="market" select={this.select} value={this.state.market} /></Col>
+                    <Col><label className="title1" style={{ marginLeft: "1.5em" }}>Market</label></Col>
+                    <Col style={{ marginLeft: "2em" }}><DropDown placeholder={"Select market..."} data={this.state.dataMarket1} id="market" select={this.select} value={this.state.market} /></Col>
 
-                    <Col span={1}><label className="title1" style={{marginLeft:"1.5em"}}>Country</label></Col>
-                    <Col span={3} style={{marginLeft:"2em"}} ><Form.Item  validateStatus="error" help={"please choose Market"}><GetCountries placeholder={"Select country..."} data={this.state. marketDuplicate} id="country" select={this.select} value={this.state.country}  hasFeedback validateStatus="error"/></Form.Item></Col>
+                    <Col ><label className="title1" style={{ marginLeft: "1.8em" }}>Country</label></Col>
+                    <Col style={{ marginLeft: "3.5em" }} span={3}><GetCountries placeholder={"Select country..."} data={this.state.marketDuplicate} id="country" error={this.state.countryError} checkErrorForCountry={this.checkErrorForCountry} select={this.select} value={this.state.country} /></Col>
 
+                    <Col span={2}><label className="title1" style={{ marginLeft: "-2em" }}>Partner Type</label></Col>
+                    <Col span={3} style={{ marginLeft: "-2.5em" }}><GetPartnerType placeholder={"Select Part...."} data={this.state.countryDuplicate} id="partnerType" error={this.state.partnerTypeError} checkErrorForPartnerType={this.checkErrorForPartnerType} select={this.select} value={this.state.partnerType} /></Col>
 
-    {/* <Form.Item
-      label="Country"
-      validateStatus="error"
-      help={"please choose filter"}
-    >
-      <Input placeholder="unavailable choice" id="error" />
-    </Form.Item> */}
-
-    
-                    <Col span={3}><label className="title1" style={{marginLeft:"2em"}} >Partner Type</label></Col>
-                    <Col span={2}><DropDown placeholder={"Select categ..."} data={this.state.dataCategory1} id="category" select={this.select} value={this.state.category} /></Col>
-
-                    <Col span={3}><label className="title1" style={{marginLeft:"2em"}} >Partner Name</label></Col>
-                    <Col span={2}><Input className="filter-text" style={{marginLeft:"-2.5em"}}  allowClear id="partnerName" onChange={this.text} value={this.state.partnerName} /></Col>
+                    <Col span={2}><label className="title1" style={{ marginLeft: "-1em" }}>Partner Name</label></Col>
+                    <Col span={2}><Input className="filter-text" style={{ marginLeft: "-1em" }} allowClear id="partnerName" onChange={this.text} value={this.state.partnerName} /></Col>
 
                     {/* <Col span={2}><label className="title1" style={{marginLeft:"-0.5em"}} >Master Partner Id</label></Col>
                     <Col span={2}><Input className="filter-text" allowClear id="masterPartnerId" onChange={this.text} value={this.state.masterPartnerId} /></Col>
@@ -328,24 +396,23 @@ class StockStatus extends React.Component {
                     <Col span={3}><label className="title1" style={{marginLeft:"2em"}} >Detailed Partner Id</label></Col>
                     <Col span={2}><Input className="filter-text" allowClear id="detailedPartnerId" onChange={this.text} value={this.state.detailedPartnerId} /></Col> */}
 
-                    <Col span={2}><label className="title1" style={{marginLeft:"1.5em"}} >MPN Model</label></Col>
+                    <Col span={2}><label className="title1" style={{ marginLeft: "1em" }}>MPN Model</label></Col>
                     <Col span={2}><Input className="filter-text" allowClear id="mpnModel" onChange={this.text} value={this.state.mpnModel} /></Col>
                 </Row>
 
-                <Row style={{ marginTop: 35 }}>
+                <Row style={{ marginTop: 20 }}>
                     <Col span={2}></Col>
 
-                    <Col span={3}><label className="title1" style={{marginLeft:"3em"}} >Category</label></Col>
-                    <Col span={2} style={{marginLeft:"-2.5em"}} ><DropDown placeholder={"Select categ..."} data={this.state.dataCategory1} id="category" select={this.select} value={this.state.category} /></Col>
+                    <Col ><label className="title1" style={{ marginLeft: "1.5em" }}>Category</label></Col>
+                    <Col style={{ marginLeft: "1em" }}><DropDown placeholder={"Select categ..."} data={this.state.dataCategory1} id="category" select={this.select} value={this.state.category} /></Col>
 
-                    <Col span={3}><label className="title1" style={{marginLeft:"3em"}} >Sub Category</label></Col>
-                    <Col span={2} style={{marginLeft:"-1.5em"}} ><DropDown placeholder={"Select Sub C..."} id="subCategory" data={this.state.dataSubCategory1} select={this.select} value={this.state.subCategory} /></Col>
+                    <Col><label className="title1" style={{ marginLeft: "1.7em" }}>Sub Category</label></Col>
+                    <Col style={{ marginLeft: "1em" }}><DropDown placeholder={"Select Sub C..."} id="subCategory" data={this.state.dataSubCategory1} select={this.select} value={this.state.subCategory} /></Col>
 
-                    <Col span={3}><label className="title1" style={{marginLeft:"3.5em"}} >Scrape Date</label></Col>
-                    <Col span={2}><DatePicker defaultVal={true} action={this.dateSelect} placeholder="Select Date" id={"scrape_date"} value={this.state.scrapeDate} /></Col>
+                    <Col><label className="title1" style={{ marginLeft: "2em" }}>Scrape Date</label></Col>
+                    <Col style={{ marginLeft: "2.2em" }}><DatePicker defaultVal={true} action={this.dateSelect} placeholder="Select Date" id={"scrape_date"} error={this.state.scrapeDateError} checkErrorForScrapeDate={this.checkErrorForScrapeDate} value={this.state.scrapeStartDate, this.state.scrapeEndDate} /></Col>
 
-                    <Col span={2}><Button style={{ backgroundColor: "#0095d9", color: "white", marginLeft:"2.5em"}} onClick={this.showResult}>Search</Button></Col>
-                    <Col span={2}><Tooltip placement="right" title="Refresh"><span style={{ color: "#0095d9", fontSize: "16px", cursor: "pointer",marginLeft:"0.5em"}} onClick={this.refresh}>Clear All</span></Tooltip></Col>
+                    <Col><Button style={{ backgroundColor: "#0095d9", color: "white", marginLeft: "25em" }} onClick={this.showResult}>Search</Button></Col>
                 </Row>
 
                 <Row>
@@ -355,8 +422,8 @@ class StockStatus extends React.Component {
                     </Col>
                     <Col span={1}></Col>
                 </Row>
-                
-                <Row style={{marginTop:"-0.5em"}}>
+
+                <Row style={{ marginTop: "-0.5em" }}>
                     <Col span={2}></Col>
                     <label className="title1">STOCK STATUS LIST</label>
                 </Row>
@@ -373,10 +440,10 @@ class StockStatus extends React.Component {
                             //     window.open(record.screenshotUrl) :null
                             //  ) })}
 
-                            onRow={(record)=>({
-                                onClick:()=>{this.callImage(record.screenshotUrl)}
+                            onRow={(record) => ({
+                                onClick: () => { this.callImage(record.screenshotUrl) }
                             })}
-                              />
+                        />
                     </Col>
                 </Row>
 
