@@ -1,6 +1,6 @@
 import React from 'react';
-import { Row, Col, Divider, Input, Table, Tooltip, Button, Modal, Form, Select } from 'antd';
-import { ExclamationCircleFilled } from '@ant-design/icons';
+import { Row, Col, Divider, Input, Table, Tooltip, Button, Modal, Form, Select,message, Space , Cascader} from 'antd';
+import { ExclamationCircleFilled,DownloadOutlined } from '@ant-design/icons';
 import "antd/dist/antd.css";
 import './StockStatus.css';
 import axios from 'axios';
@@ -9,47 +9,188 @@ import DatePicker from '../../components/DatePicker/DatePicker';
 import GetCountries from '../../components/getCountries/GetCountries';
 import GetPartnerType from '../../components/getPartnerType/GetPartnerType';
 
+// const options = [
+//     {
+//       value: 'india',
+//       label: 'india',
+
+//       children: [
+//         {
+//           value: 'MP',
+//           label: 'MP',  
+          
+//           children: [
+//             {
+//               value: 'bhopal',
+//               label: 'bhopal',
+//             },
+//             {
+//               value: 'indore',
+//               label: 'indore',
+//             },
+//             {
+//                 value: 'sagar',
+//                 label: 'sagar',
+//               },
+//           ],
+//         },
+//         {
+//             value: 'UP',
+//             label: 'UP',  
+            
+//             children: [
+//               {
+//                 value: 'city1',
+//                 label: 'city1',
+//               },
+//               {
+//                 value: 'city2',
+//                 label: 'city2',
+//               },
+//               {
+//                   value: 'city3',
+//                   label: 'city3',
+//               },
+//             ],
+//           },
+//           {
+//             value: 'Maharastra',
+//             label: 'Maharastra',  
+            
+//             children: [
+//               {
+//                 value: 'city11',
+//                 label: 'city11',
+//               },
+//               {
+//                 value: 'city21',
+//                 label: 'city21',
+//               },
+//               {
+//                   value: 'city31',
+//                   label: 'city31',
+//               },
+//             ],
+//           },
+
+//       ],
+//     },
+
+
+//     {
+//         value: 'US',
+//         label: 'US',
+  
+//         children: [
+//           {
+//             value: 'washington',
+//             label: 'washington',  
+            
+//             children: [
+//               {
+//                 value: 'bhopal',
+//                 label: 'bhopal',
+//               },
+//               {
+//                 value: 'indore',
+//                 label: 'indore',
+//               },
+//               {
+//                   value: 'sagar',
+//                   label: 'sagar',
+//                 },
+//             ],
+//           },
+//           {
+//               value: 'UP',
+//               label: 'UP',  
+              
+//               children: [
+//                 {
+//                   value: 'city1',
+//                   label: 'city1',
+//                 },
+//                 {
+//                   value: 'city2',
+//                   label: 'city2',
+//                 },
+//                 {
+//                     value: 'city3',
+//                     label: 'city3',
+//                 },
+//               ],
+//             },
+//             {
+//               value: 'Maharastra',
+//               label: 'Maharastra',  
+              
+//               children: [
+//                 {
+//                   value: 'city11',
+//                   label: 'city11',
+//                 },
+//                 {
+//                   value: 'city21',
+//                   label: 'city21',
+//                 },
+//                 {
+//                     value: 'city31',
+//                     label: 'city31',
+//                 },
+//               ],
+//             },
+  
+//         ],
+//       },
+//   ];
+  
+
 const { Option } = Select;
 class StockStatus extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            market: '',
             country: '',
+            partnerType: '',
             partnerName: '',
+            mpnModel: '',
             masterPartnerId: '',
             detailedPartnerId: '',
-            mpnModel: '',
-            market: '',
-            marketDuplicate: 'undefined',
-            countryDuplicate: 'undefined',
             category: '',
             subCategory: '',
             // scrapeDate: '',
             scrapeStartDate: '',
             scrapeEndDate: '',
+            marketDuplicate: 'undefined',
+            countryDuplicate: 'undefined',
             dataCategory1: [],
             dataSubCategory1: [],
             dataMarket1: [],
             dataCountry1: [],
             screenshotUrl: '',
-            partnerType: '',
             dataReceivedFromBackend: [],
             countryError: false,
             partnerTypeError: false,
-            scrapeDateError:false,
+            scrapeDateError: false,
             spin: false,
             higherRecordLength: false,
             showImage: false,
+          //  options:options,
         };
 
         this.columns = [
             {
-                title: "Screenshot Url",
+                title: "Screenshot",
                 dataIndex: 'screenshotUrl',
                 key: 'screenshotUrl',
                 render: (text) => {
-                    if (text != " " && text != null)
-                        return <label style={{ cursor: "pointer", color: "#0095d9" }}>Click Here</label>
+                    if (text != " " && text != "" && text != null)
+                        return <div>
+                            <label style={{ cursor: "pointer", color: "#0095d9" }} onClick={()=>{this.callImage(text) }}>Click Here</label>
+                            <a href={`data:image/png;base64,${text}`} download={"stock_status"}><DownloadOutlined className="icon"/></a>
+                        </div>
+
                     else
                         return <label>Screenshot not available</label>
                 }
@@ -145,8 +286,8 @@ class StockStatus extends React.Component {
                         })
                     }
                 }
-                else {
-                    console.log('error is coming')
+                else{
+                    this.error();
                 }
                 this.setState({
                     dataCategory1: dataCategory,
@@ -155,8 +296,15 @@ class StockStatus extends React.Component {
                     dataCountry1: dataCountry,
                 })
             })
-            .catch(err => err);
+             .catch(err => {
+                    this.error();
+                });
     }
+
+    error = () => {
+        message.error('something went wrong! Please try agian');
+      };
+
     text = (event) => {
 
         if (event.target.id === "partnerName") {
@@ -236,7 +384,7 @@ class StockStatus extends React.Component {
             spin: false,
             higherRecordLength: false,
             countryError: false,
-            scrapeDateError:false,
+            scrapeDateError: false,
             partnerTypeError: false,
             marketDuplicate: 'undefined',
             countryDuplicate: 'undefined',
@@ -246,9 +394,9 @@ class StockStatus extends React.Component {
     showResult = () => {
 
         if (this.state.scrapeStartDate == "" || this.state.scrapeEndDate == "") {
-                 this.setState({
-                    scrapeDateError:true,
-                 })
+            this.setState({
+                scrapeDateError: true,
+            })
         }
         else {
             this.setState({
@@ -285,9 +433,9 @@ class StockStatus extends React.Component {
                                         market: data.market,
                                         category: data.category,
                                         subCategory: data.subCategory,
-                                        // scrapeDate: data.scrapeDate,
-                                        scrapeStartDate: data.scrapeStartDate,
-                                        scrapeEndDate: data.scrapeEndDate,
+                                        scrapeDate: data.scrapeDate,
+                                        // scrapeStartDate: data.scrapeStartDate,
+                                        // scrapeEndDate: data.scrapeEndDate,
                                         screenshotUrl: data.screenshotUrl,
                                         partnerType: data.partnerType,
                                     })
@@ -305,6 +453,9 @@ class StockStatus extends React.Component {
                                 })
                             }
                         }
+                        else{
+                            this.error();
+                        }
                     })
                     .catch(err => err);
             })
@@ -316,7 +467,7 @@ class StockStatus extends React.Component {
             // scrapeDate: dateString,
             scrapeStartDate: dateString[0],
             scrapeEndDate: dateString[1],
-            scrapeDateError:false,
+            scrapeDateError: false,
         })
 
     }
@@ -334,12 +485,14 @@ class StockStatus extends React.Component {
     // }
 
     callImage = (record) => {
-        const w = window.open('about:blank');
-        const image = new Image();
-        image.src = "data:image/jpg;base64," + record;
-        setTimeout(function () {
-            w.document.write(image.outerHTML);
-        }, 0);
+        if (record != "" && record != " " && record != null) {
+            const w = window.open('about:blank');
+            const image = new Image();
+            image.src = "data:image/jpg;base64," + record;
+            setTimeout(function () {
+                w.document.write(image.outerHTML);
+            }, 0);
+        }
     }
 
     checkErrorForCountry = () => {
@@ -358,13 +511,17 @@ class StockStatus extends React.Component {
         }
     }
 
-    checkErrorForScrapeDate=()=>{
-        if(this.state.scrapeEndDate !="" && this.state.scrapeStartDate!=""){
+    checkErrorForScrapeDate = () => {
+        if (this.state.scrapeEndDate != "" && this.state.scrapeStartDate != "") {
             this.setState({
 
             })
         }
     }
+
+    // onChange = (value, selectedOptions) => {
+    //     console.log(value, selectedOptions);
+    //   };
     render() {
         return (
             <div style={{ marginLeft: "-7em" }}>
@@ -378,6 +535,13 @@ class StockStatus extends React.Component {
                 <Row style={{ marginTop: "1.5em" }}>
                     <Col span={2}></Col>
 
+                    {/* <Cascader
+        options={this.state.options}
+        // loadData={this.loadData}
+        onChange={this.onChange}
+        changeOnSelect
+      /> */}
+
                     <Col><label className="title1" style={{ marginLeft: "1.5em" }}>Market</label></Col>
                     <Col style={{ marginLeft: "2em" }}><DropDown placeholder={"Select market..."} data={this.state.dataMarket1} id="market" select={this.select} value={this.state.market} /></Col>
 
@@ -388,7 +552,7 @@ class StockStatus extends React.Component {
                     <Col span={3} style={{ marginLeft: "-2.5em" }}><GetPartnerType placeholder={"Select Part...."} data={this.state.countryDuplicate} id="partnerType" error={this.state.partnerTypeError} checkErrorForPartnerType={this.checkErrorForPartnerType} select={this.select} value={this.state.partnerType} /></Col>
 
                     <Col span={2}><label className="title1" style={{ marginLeft: "-1em" }}>Partner Name</label></Col>
-                    <Col span={2}><Input className="filter-text" style={{ marginLeft: "-1em" }} allowClear id="partnerName" onChange={this.text} value={this.state.partnerName} /></Col>
+                    <Col span={2}><Input className="filter-text" style={{ marginLeft: "-1em" }} placeholder="Select partner name" allowClear id="partnerName" onChange={this.text} value={this.state.partnerName} /></Col>
 
                     {/* <Col span={2}><label className="title1" style={{marginLeft:"-0.5em"}} >Master Partner Id</label></Col>
                     <Col span={2}><Input className="filter-text" allowClear id="masterPartnerId" onChange={this.text} value={this.state.masterPartnerId} /></Col>
@@ -397,7 +561,7 @@ class StockStatus extends React.Component {
                     <Col span={2}><Input className="filter-text" allowClear id="detailedPartnerId" onChange={this.text} value={this.state.detailedPartnerId} /></Col> */}
 
                     <Col span={2}><label className="title1" style={{ marginLeft: "1em" }}>MPN Model</label></Col>
-                    <Col span={2}><Input className="filter-text" allowClear id="mpnModel" onChange={this.text} value={this.state.mpnModel} /></Col>
+                    <Col span={2}><Input className="filter-text" allowClear id="mpnModel" placeholder="Select MPN model" onChange={this.text} value={this.state.mpnModel} /></Col>
                 </Row>
 
                 <Row style={{ marginTop: 20 }}>
@@ -440,9 +604,9 @@ class StockStatus extends React.Component {
                             //     window.open(record.screenshotUrl) :null
                             //  ) })}
 
-                            onRow={(record) => ({
-                                onClick: () => { this.callImage(record.screenshotUrl) }
-                            })}
+                            // onRow={(record) => ({
+                            //     onClick: () => { this.callImage(record.screenshotUrl) }
+                            // })}
                         />
                     </Col>
                 </Row>

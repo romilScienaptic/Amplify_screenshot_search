@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Select, Spin, Input, Form } from 'antd';
+import { Select, Spin, Input, Form,message } from 'antd';
 
 const { Option } = Select;
 
@@ -16,11 +16,18 @@ class GetCountries extends React.PureComponent {
     componentWillReceiveProps(nextProps) {
         axios.get(`${process.env.REACT_APP_DOMAIN}/api/v1/stock_status/getCountries/${nextProps.data}`)
             .then(response => {
-                this.setState({
-                    marketData: [...response.data],
-                })
+                if(response.status === 200){
+                    this.setState({
+                        marketData: [...response.data],
+                    })
+                }
+                else{
+                    this.error();
+                }
             })
-            .catch(err => err);
+            .catch(err => {
+                this.error();
+            });
 
             if(nextProps.value !== "")
             this.setState({ val: nextProps.value});
@@ -31,6 +38,10 @@ class GetCountries extends React.PureComponent {
     handleChange=(value)=>{
         this.props.select(value,this.props.id);
     }
+    error = () => {
+        message.error('something went wrong! Please try agian');
+      };
+      
 
     render() {
         if (this.props.data == 'undefined' && this.props.error === false) {

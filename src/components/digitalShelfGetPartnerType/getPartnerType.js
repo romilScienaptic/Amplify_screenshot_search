@@ -4,7 +4,7 @@ import { Select, Spin, Input, Form,message } from 'antd';
 
 const { Option } = Select;
 
-class GetPartnerType extends React.PureComponent {
+class getPartnerType extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -14,16 +14,16 @@ class GetPartnerType extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        axios.get(`${process.env.REACT_APP_DOMAIN}/api/v1/stock_status/getPartnerType/${nextProps.data}`)
+        axios.get(`${process.env.REACT_APP_DOMAIN}/api/v1/digital_shelf/getPartnerType/${nextProps.data}`)
             .then(response => {
                 if(response.status === 200){
-                    this.setState({
-                        partnerData: [...response.data],
-                    })
-                }
-                else{
-                    this.error();
-                }
+                this.setState({
+                    partnerData: [...response.data],
+                })
+            }
+            else{
+                this.error();
+            }
             })
             .catch(err => {
                 this.error();
@@ -39,11 +39,11 @@ class GetPartnerType extends React.PureComponent {
         this.props.select(value,this.props.id);
     }
 
+    
     error = () => {
         message.error('something went wrong! Please try agian');
       };
       
-
     render() {
         if (this.props.data == 'undefined' && this.props.error === false) {
            return <Form.Item validateStatus={'none'} onClick={()=>{this.props.checkErrorForPartnerType()}}><Input className="filter-text" style={{ width:116 }} placeholder={this.props.placeholder}/></Form.Item>
@@ -78,4 +78,4 @@ class GetPartnerType extends React.PureComponent {
     }
 }
 
-export default GetPartnerType;
+export default getPartnerType;

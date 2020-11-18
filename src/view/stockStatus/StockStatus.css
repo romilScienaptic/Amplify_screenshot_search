@@ -30,6 +30,10 @@ thead[class*="ant-table-thead"] th{
 }
 
 
+.icon{
+  margin-left:12px;
+  font-size: larger;
+}
 
 
 

@@ -16,7 +16,7 @@ class Tab extends React.Component {
                         <StockStatus/>
                     </TabPane>
 
-                    <TabPane tab="DIGITAL SELF" key="2" >
+                    <TabPane tab="DIGITAL SHELF" key="2" >
                         <DigitalSelf/>
                     </TabPane>
                 </Tabs>
