@@ -176,6 +176,7 @@ class StockStatus extends React.Component {
             spin: false,
             higherRecordLength: false,
             showImage: false,
+            secondRowGap:0,
           //  options:options,
         };
 
@@ -339,6 +340,7 @@ class StockStatus extends React.Component {
                 country: '',
                 countryDuplicate: 'undefined',
                 partnerTypeError: false,
+                secondRowGap:0,
             })
         }
         else if (id === "category") {
@@ -356,6 +358,7 @@ class StockStatus extends React.Component {
                 country: value,
                 countryDuplicate: value,
                 partnerType: '',
+                secondRowGap:0,
             })
         }
         else if (id === "partnerType") {
@@ -388,6 +391,7 @@ class StockStatus extends React.Component {
             partnerTypeError: false,
             marketDuplicate: 'undefined',
             countryDuplicate: 'undefined',
+            secondRowGap:0,
         })
     }
 
@@ -499,6 +503,7 @@ class StockStatus extends React.Component {
         if (this.state.marketDuplicate === 'undefined') {
             this.setState({
                 countryError: true,
+                secondRowGap:8,
             })
         }
     }
@@ -507,6 +512,7 @@ class StockStatus extends React.Component {
         if (this.state.countryDuplicate === 'undefined') {
             this.setState({
                 partnerTypeError: true,
+                secondRowGap:8,
             })
         }
     }
@@ -528,11 +534,12 @@ class StockStatus extends React.Component {
                 <Row>
                     <Col span={2}></Col>
                     <label className="title1">STOCK STATUS FILTERS</label>
-                    <Col span={22}></Col>
-                    <Col style={{ marginTop: "-2em" }}><Tooltip placement="right" title="Refresh"><span style={{ color: "#0095d9", fontSize: "15px", cursor: "pointer", marginLeft: "1em" }} onClick={this.refresh}>Clear All</span></Tooltip></Col>
+                    <Col span={16}></Col>
+                    <Col><Button style={{ backgroundColor: "#0095d9", color: "white",marginLeft:"2em", marginTop:"-1em" }} onClick={this.showResult}>Search</Button></Col>
+                    <Col style={{marginTop:"-0.2em"}}><Tooltip placement="top" title="Refresh"><span style={{ color: "#0095d9", fontSize: "15px", cursor: "pointer", marginLeft: "1em"}} onClick={this.refresh}>Clear All</span></Tooltip></Col>
                 </Row>
 
-                <Row style={{ marginTop: "1.5em" }}>
+                <Row style={{ marginTop: "1em" }}>
                     <Col span={2}></Col>
 
                     {/* <Cascader
@@ -542,44 +549,42 @@ class StockStatus extends React.Component {
         changeOnSelect
       /> */}
 
-                    <Col><label className="title1" style={{ marginLeft: "1.5em" }}>Market</label></Col>
-                    <Col style={{ marginLeft: "2em" }}><DropDown placeholder={"Select market..."} data={this.state.dataMarket1} id="market" select={this.select} value={this.state.market} /></Col>
+                    <Col><label className="title1" style={{ marginLeft: "0em" }}>Market</label></Col>
+                    <Col style={{ marginLeft: "3.2em"}}><DropDown placeholder={"Select market..."} data={this.state.dataMarket1} id="market" select={this.select} value={this.state.market} /></Col>
 
-                    <Col ><label className="title1" style={{ marginLeft: "1.8em" }}>Country</label></Col>
-                    <Col style={{ marginLeft: "3.5em" }} span={3}><GetCountries placeholder={"Select country..."} data={this.state.marketDuplicate} id="country" error={this.state.countryError} checkErrorForCountry={this.checkErrorForCountry} select={this.select} value={this.state.country} /></Col>
+                    <Col ><label className="title1" style={{ marginLeft: "2em" }}>Country</label></Col>
+                    <Col style={{ marginLeft: "1.4em" }}><GetCountries placeholder={"Select country..."} data={this.state.marketDuplicate} id="country" error={this.state.countryError} checkErrorForCountry={this.checkErrorForCountry} select={this.select} value={this.state.country} /></Col>
 
-                    <Col span={2}><label className="title1" style={{ marginLeft: "-2em" }}>Partner Type</label></Col>
-                    <Col span={3} style={{ marginLeft: "-2.5em" }}><GetPartnerType placeholder={"Select Part...."} data={this.state.countryDuplicate} id="partnerType" error={this.state.partnerTypeError} checkErrorForPartnerType={this.checkErrorForPartnerType} select={this.select} value={this.state.partnerType} /></Col>
+                    <Col ><label className="title1" style={{ marginLeft: "2em" }}>Partner Type</label></Col>
+                    <Col style={{ marginLeft: "1.4em" }}><GetPartnerType placeholder={"Select Part...."} data={this.state.countryDuplicate} id="partnerType" error={this.state.partnerTypeError} checkErrorForPartnerType={this.checkErrorForPartnerType} select={this.select} value={this.state.partnerType} /></Col>
 
-                    <Col span={2}><label className="title1" style={{ marginLeft: "-1em" }}>Partner Name</label></Col>
-                    <Col span={2}><Input className="filter-text" style={{ marginLeft: "-1em" }} placeholder="Select partner name" allowClear id="partnerName" onChange={this.text} value={this.state.partnerName} /></Col>
+                    <Col><label className="title1" style={{ marginLeft: "2em" }}>Partner Name</label></Col>
+                    <Col><Input className="filter-text" style={{ marginLeft: "1em", width:215 }} placeholder="Select partner name" allowClear id="partnerName" onChange={this.text} value={this.state.partnerName} /></Col>
 
                     {/* <Col span={2}><label className="title1" style={{marginLeft:"-0.5em"}} >Master Partner Id</label></Col>
                     <Col span={2}><Input className="filter-text" allowClear id="masterPartnerId" onChange={this.text} value={this.state.masterPartnerId} /></Col>
 
                     <Col span={3}><label className="title1" style={{marginLeft:"2em"}} >Detailed Partner Id</label></Col>
                     <Col span={2}><Input className="filter-text" allowClear id="detailedPartnerId" onChange={this.text} value={this.state.detailedPartnerId} /></Col> */}
-
-                    <Col span={2}><label className="title1" style={{ marginLeft: "1em" }}>MPN Model</label></Col>
-                    <Col span={2}><Input className="filter-text" allowClear id="mpnModel" placeholder="Select MPN model" onChange={this.text} value={this.state.mpnModel} /></Col>
                 </Row>
 
-                <Row style={{ marginTop: 20 }}>
+                <Row style={{ marginTop: this.state.secondRowGap }}>
                     <Col span={2}></Col>
 
-                    <Col ><label className="title1" style={{ marginLeft: "1.5em" }}>Category</label></Col>
+                    <Col><label className="title1" style={{ marginLeft: "0em" }}>MPN Model</label></Col>
+                    <Col><Input className="filter-text" style={{marginLeft:"1em",width:190}}allowClear id="mpnModel" placeholder="Select MPN model" onChange={this.text} value={this.state.mpnModel} /></Col>
+
+                    <Col ><label className="title1" style={{ marginLeft: "1.9em" }}>Category</label></Col>
                     <Col style={{ marginLeft: "1em" }}><DropDown placeholder={"Select categ..."} data={this.state.dataCategory1} id="category" select={this.select} value={this.state.category} /></Col>
 
-                    <Col><label className="title1" style={{ marginLeft: "1.7em" }}>Sub Category</label></Col>
+                    <Col><label className="title1" style={{ marginLeft: "2em" }}>Sub Category</label></Col>
                     <Col style={{ marginLeft: "1em" }}><DropDown placeholder={"Select Sub C..."} id="subCategory" data={this.state.dataSubCategory1} select={this.select} value={this.state.subCategory} /></Col>
 
                     <Col><label className="title1" style={{ marginLeft: "2em" }}>Scrape Date</label></Col>
-                    <Col style={{ marginLeft: "2.2em" }}><DatePicker defaultVal={true} action={this.dateSelect} placeholder="Select Date" id={"scrape_date"} error={this.state.scrapeDateError} checkErrorForScrapeDate={this.checkErrorForScrapeDate} value={this.state.scrapeStartDate, this.state.scrapeEndDate} /></Col>
-
-                    <Col><Button style={{ backgroundColor: "#0095d9", color: "white", marginLeft: "25em" }} onClick={this.showResult}>Search</Button></Col>
+                    <Col style={{ marginLeft: "1.8em" }}><DatePicker defaultVal={true} action={this.dateSelect} placeholder="Select Date" id={"scrape_date"} error={this.state.scrapeDateError} checkErrorForScrapeDate={this.checkErrorForScrapeDate} value={this.state.scrapeStartDate, this.state.scrapeEndDate} /></Col>
                 </Row>
 
-                <Row>
+                <Row style={{marginTop:"-0.1em"}}>
                     <Col span={2}></Col>
                     <Col span={22}>
                         <Divider />

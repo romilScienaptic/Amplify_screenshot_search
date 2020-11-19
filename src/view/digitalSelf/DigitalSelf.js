@@ -1,9 +1,9 @@
 import React from 'react';
-import { Row, Col, Divider, Input, Table, Tooltip, Button, Modal, Select,message, Space } from 'antd';
-import { ExclamationCircleFilled,DownloadOutlined } from '@ant-design/icons';
+import { Row, Col, Divider, Input, Table, Tooltip, Button, Modal, Select, message, Space } from 'antd';
+import { ExclamationCircleFilled, DownloadOutlined } from '@ant-design/icons';
 import "antd/dist/antd.css";
 import './digitalSelf.css';
-import DropDown from '../../components/Dropdown/Dropdown';
+import DropDown from '../../components/digitalShelfDropdown/dropdown';
 import DatePicker from '../../components/DatePicker/DatePicker';
 import axios from 'axios';
 import GetCountries from '../../components/digitalShelfGetCountries/getCountries';
@@ -31,7 +31,7 @@ class DigitalSelf extends React.Component {
             dataCategory1: [],
             dataSubCategory1: [],
             dataMarket1: [],
-            dataCountry1:[],
+            dataCountry1: [],
             screenshotUrl: '',
             dataReceivedFromBackend: [],
             spin: false,
@@ -40,6 +40,7 @@ class DigitalSelf extends React.Component {
             partnerTypeError: false,
             scrapeDateError: false,
             showImage: false,
+            secondRowGap:-7,
         };
 
         this.columns = [
@@ -48,10 +49,10 @@ class DigitalSelf extends React.Component {
                 dataIndex: 'screenshotUrl',
                 key: 'screenshotUrl',
                 render: (text) => {
-                     if (text != " " && text != "" && text != null)
-                     return <div>
-                            <label style={{ cursor: "pointer", color: "#0095d9" }} onClick={()=>{this.callImage(text) }}>Click Here</label>
-                            <a href={`data:image/png;base64,${text}`} download={"digital_shelf"}><DownloadOutlined className="icon"/></a>
+                    if (text != " " && text != "" && text != null)
+                        return <div>
+                            <label style={{ cursor: "pointer", color: "#0095d9" }} onClick={() => { this.callImage(text) }}>Click Here</label>
+                            <a href={`data:image/png;base64,${text}`} download={"digital_shelf"}><DownloadOutlined className="icon" /></a>
                         </div>
                     else
                         return <label style={{ cursor: "pointer" }}>Screenshot not available</label>
@@ -99,14 +100,14 @@ class DigitalSelf extends React.Component {
                 key: 'keywordSubcategory',
                 // width: 80,
             },
-               {
+            {
                 title: "Master Partner Id",
                 dataIndex: 'masterPartnerId',
                 key: 'masterPartnerId',
                 // width: 80,
             },
 
-        
+
             {
                 title: "Detailed Partner Id",
                 dataIndex: 'detailedPartnerId',
@@ -130,7 +131,7 @@ class DigitalSelf extends React.Component {
 
 
     componentDidMount() {
-        let dataCategory = [], dataSubCategory = [], dataMarket = [], dataCountry=[];
+        let dataCategory = [], dataSubCategory = [], dataMarket = [], dataCountry = [];
         axios.get(process.env.REACT_APP_DOMAIN + '/api/v1/digital_shelf/filter_data')
             .then(response => {
                 if (response.status === 200) {
@@ -150,20 +151,20 @@ class DigitalSelf extends React.Component {
                             dataMarket.push(val);
                         })
                     }
-                    if(response.data.country){
-                        response.data.country.map((val)=>{
+                    if (response.data.country) {
+                        response.data.country.map((val) => {
                             dataCountry.push(val);
                         })
                     }
                 }
-                else{
+                else {
                     this.error();
                 }
                 this.setState({
                     dataCategory1: dataCategory,
                     dataSubCategory1: dataSubCategory,
                     dataMarket1: dataMarket,
-                    dataCountry1:dataCountry,
+                    dataCountry1: dataCountry,
                 })
             })
             .catch(err => {
@@ -171,9 +172,9 @@ class DigitalSelf extends React.Component {
             });
     }
 
-    error =() => {
+    error = () => {
         message.error('something went wrong! Please try agian');
-      };
+    };
 
     text = (event) => {
 
@@ -219,6 +220,7 @@ class DigitalSelf extends React.Component {
                 country: '',
                 countryDuplicate: 'undefined',
                 partnerTypeError: false,
+                secondRowGap:-7,
             })
         }
         else if (id === "category") {
@@ -231,11 +233,12 @@ class DigitalSelf extends React.Component {
                 keywordSubcategory: value,
             })
         }
-        else if(id === "country"){
+        else if (id === "country") {
             this.setState({
-                country:value,
+                country: value,
                 countryDuplicate: value,
                 partnerType: '',
+                secondRowGap:-7,
             })
         }
         else if (id === "partnerType") {
@@ -269,6 +272,7 @@ class DigitalSelf extends React.Component {
             partnerTypeError: false,
             marketDuplicate: 'undefined',
             countryDuplicate: 'undefined',
+            secondRowGap:-7,
         })
     }
 
@@ -279,72 +283,72 @@ class DigitalSelf extends React.Component {
                 scrapeDateError: true,
             })
         }
-        else{
-        this.setState({
-            spin: true,
-        })
-        const data = {
-            country: this.state.country,
-            partnerName: this.state.partnerName,
-            masterPartnerId: this.state.masterPartnerId,
-            detailedPartnerId: this.state.detailedPartnerId,
-            keywordId: this.state.keywordId,
-            market: this.state.market,
-            category: this.state.keywordCategory,
-            subCategory: this.state.keywordSubcategory,
-           // scrapeDate: this.state.scrapeDate,
-           scrapeStartDate: this.state.scrapeStartDate,
-           scrapeEndDate: this.state.scrapeEndDate,
-           partnerType: this.state.partnerType,
-           // keywordText: this.state.keywordText,
-        }
-        let dataPacket = [];
-        return new Promise((resolve, reject) => {
-            axios.post(process.env.REACT_APP_DOMAIN + '/api/v1/digital_shelf/screenshot', data)
-                .then(response => {
-                    console.log("res", response)
-                    if (response.status === 200) {
-                        if (response.data.length <= 20) {
-                            response.data.map((data) => {
-                                dataPacket.push({
-                                    country: data.country,
-                                    partnerName: data.partnerName,
-                                   masterPartnerId: data.masterPartnerId,
-                                   detailedPartnerId: data.detailedPartnerId,
-                                    keywordId: data.keywordId,
-                                    market: data.market,
-                                    keywordCategory: data.keywordCategory,
-                                    keywordSubcategory: data.keywordSubcategory,
-                                    scrapeDate: data.scrapeDate,
-                                     // scrapeStartDate: data.scrapeStartDate,
+        else {
+            this.setState({
+                spin: true,
+            })
+            const data = {
+                country: this.state.country,
+                partnerName: this.state.partnerName,
+                masterPartnerId: this.state.masterPartnerId,
+                detailedPartnerId: this.state.detailedPartnerId,
+                keywordId: this.state.keywordId,
+                market: this.state.market,
+                category: this.state.keywordCategory,
+                subCategory: this.state.keywordSubcategory,
+                // scrapeDate: this.state.scrapeDate,
+                scrapeStartDate: this.state.scrapeStartDate,
+                scrapeEndDate: this.state.scrapeEndDate,
+                partnerType: this.state.partnerType,
+                // keywordText: this.state.keywordText,
+            }
+            let dataPacket = [];
+            return new Promise((resolve, reject) => {
+                axios.post(process.env.REACT_APP_DOMAIN + '/api/v1/digital_shelf/screenshot', data)
+                    .then(response => {
+                        console.log("res", response)
+                        if (response.status === 200) {
+                            if (response.data.length <= 20) {
+                                response.data.map((data) => {
+                                    dataPacket.push({
+                                        country: data.country,
+                                        partnerName: data.partnerName,
+                                        masterPartnerId: data.masterPartnerId,
+                                        detailedPartnerId: data.detailedPartnerId,
+                                        keywordId: data.keywordId,
+                                        market: data.market,
+                                        keywordCategory: data.keywordCategory,
+                                        keywordSubcategory: data.keywordSubcategory,
+                                        scrapeDate: data.scrapeDate,
+                                        // scrapeStartDate: data.scrapeStartDate,
                                         // scrapeEndDate: data.scrapeEndDate,
-                                    screenshotUrl: data.screenshotUrl,
-                                    partnerType: data.partnerType,
-                                    //keywordText: data.keywordText,
+                                        screenshotUrl: data.screenshotUrl,
+                                        partnerType: data.partnerType,
+                                        //keywordText: data.keywordText,
+                                    })
                                 })
-                            })
-                            this.setState({
-                                dataReceived: true,
-                                spin: false,
-                                dataReceivedFromBackend: dataPacket,
-                                higherRecordLength: false,
-                            })
+                                this.setState({
+                                    dataReceived: true,
+                                    spin: false,
+                                    dataReceivedFromBackend: dataPacket,
+                                    higherRecordLength: false,
+                                })
+                            }
+                            else {
+                                this.setState({
+                                    higherRecordLength: true,
+                                })
+                            }
                         }
                         else {
-                            this.setState({
-                                higherRecordLength: true,
-                            })
+                            this.error();
                         }
-                    }
-                    else{
+                    })
+                    .catch(err => {
                         this.error();
-                    }
-                })
-                .catch(err => {
-                    this.error();
-                });
-        })
-    }
+                    });
+            })
+        }
     }
 
     dateSelect = (date, dateString, id) => {
@@ -364,20 +368,21 @@ class DigitalSelf extends React.Component {
     }
 
     callImage = (record) => {
-        if(record != "" && record !=" " && record != null){
-        const w = window.open('about:blank');
-        const image = new Image();
-        image.src = "data:image/jpg;base64," + record;
-        setTimeout(function () {
-            w.document.write(image.outerHTML);
-        }, 0);
-    }
+        if (record != "" && record != " " && record != null) {
+            const w = window.open('about:blank');
+            const image = new Image();
+            image.src = "data:image/jpg;base64," + record;
+            setTimeout(function () {
+                w.document.write(image.outerHTML);
+            }, 0);
+        }
     }
 
     checkErrorForCountry = () => {
         if (this.state.marketDuplicate === 'undefined') {
             this.setState({
                 countryError: true,
+                secondRowGap:1,
             })
         }
     }
@@ -386,6 +391,7 @@ class DigitalSelf extends React.Component {
         if (this.state.countryDuplicate === 'undefined') {
             this.setState({
                 partnerTypeError: true,
+                secondRowGap:1,
             })
         }
     }
@@ -406,57 +412,61 @@ class DigitalSelf extends React.Component {
                 <Row>
                     <Col span={2}></Col>
                     <label className="title1">DIGITAL SHELF FILTERS</label>
-                    <Col span={22}></Col>
-                    <Col style={{ marginTop: "-2em" }}><Tooltip placement="top" title="Refresh" ><span style={{ color: "#0095d9", fontSize: "15px", cursor: "pointer",marginLeft:"2.5em"}} onClick={this.refresh}>Clear All</span></Tooltip></Col>
                 </Row>
 
-                <Row style={{ marginTop: "1.5em" }}>
+                <Row style={{ marginTop: "1em" }}>
                     <Col span={2}></Col>
 
-                    <Col><label className="title1">Market</label></Col>
-                    <Col span={2} style={{marginLeft:"2.5em"}}><DropDown placeholder={"Select market..."} id="market" data={this.state.dataMarket1} select={this.select} value={this.state.market} /></Col>
+                    <Col><label className="title1" style={{ marginLeft: "0em" }}>Market</label></Col>
+                    <Col style={{ marginLeft: "3.7em" }}><DropDown placeholder={"Select market..."} id="market" data={this.state.dataMarket1} select={this.select} value={this.state.market} /></Col>
 
-                    <Col><label className="title1" style={{marginLeft:"1em"}}>Country</label></Col>
-                    <Col span={3} style={{marginLeft:"3em"}}><GetCountries placeholder={"Select country..."} data={this.state.marketDuplicate} id="country" error={this.state.countryError} checkErrorForCountry={this.checkErrorForCountry} select={this.select} value={this.state.country} /></Col>
+                    <Col><label className="title1" style={{ marginLeft: "2.5em" }}>Country</label></Col>
+                    <Col style={{ marginLeft: "5.5em" }}><GetCountries placeholder={"Select country..."} data={this.state.marketDuplicate} id="country" error={this.state.countryError} checkErrorForCountry={this.checkErrorForCountry} select={this.select} value={this.state.country} /></Col>
 
-                    <Col ><label className="title1" style={{marginLeft:"-2.8em"}}>Partner Type</label></Col>
-                    <Col span={3} style={{marginLeft:"3em"}}><GetPartnerType placeholder={"Select Part...."} data={this.state.countryDuplicate} id="partnerType" error={this.state.partnerTypeError} checkErrorForPartnerType={this.checkErrorForPartnerType} select={this.select} value={this.state.partnerType} /></Col>
+                    <Col ><label className="title1" style={{ marginLeft: "2em" }}>Partner Type</label></Col>
+                    <Col style={{ marginLeft: "3.4em" }}><GetPartnerType placeholder={"Select Part...."} data={this.state.countryDuplicate} id="partnerType" error={this.state.partnerTypeError} checkErrorForPartnerType={this.checkErrorForPartnerType} select={this.select} value={this.state.partnerType} /></Col>
 
-                    <Col><label className="title1" style={{marginLeft:"-3em"}}>Master Partner Id</label></Col>
-                    <Col span={2}><Input className="filter-text" span={3} style={{marginLeft:"2.5em"}} allowClear id="masterPartnerId" placeholder="Select master partner id"onChange={this.text} value={this.state.masterPartnerId} /></Col>
 
-                    <Col span={3}><label className="title1" style={{marginLeft:"3.5em"}}>Detailed Partner Id</label></Col>
-                    <Col span={2}><Input className="filter-text" style={{marginLeft:"1.4em"}} allowClear id="detailedPartnerId" placeholder="Select detailed partner id" onChange={this.text} value={this.state.detailedPartnerId} /></Col>
-
+                    <Col><label className="title1" style={{ marginLeft: "2em" }}>Master Partner Id</label></Col>
+                    <Col ><Input className="filter-text" style={{ marginLeft: "2.8em", width: 160 }} allowClear id="masterPartnerId" placeholder="Select master partner id" onChange={this.text} value={this.state.masterPartnerId} /></Col>
                 </Row>
 
-                <Row style={{ marginTop: 20 }}>
+                <Row style={{ marginTop: this.state.secondRowGap }}>
                     <Col span={2}></Col>
 
-                    <Col><label className="title1">Keyword Id</label></Col>
-                    <Col span={2}><Input className="filter-text" style={{marginLeft:"0.5em"}} placeholder="Select keyword id"allowClear id="keywordId" onChange={this.text} value={this.state.keywordId} /></Col>
+                    <Col><label className="title1" style={{ marginLeft: "0em" }}>Keyword Id</label></Col>
+                    <Col ><Input className="filter-text" style={{ marginLeft: "1.8em", width: 160 }} placeholder="Select keyword id" allowClear id="keywordId" onChange={this.text} value={this.state.keywordId} /></Col>
 
-                     <Col><label className="title1"  style={{marginLeft:"1.5em"}}>Partner Name</label></Col>
-                    <Col span={2}><Input className="filter-text" style={{marginLeft:"0.5em"}} placeholder="Select partner name" allowClear id="partnerName" onChange={this.text} value={this.state.partnerName} /></Col>
+                    <Col><label className="title1" style={{ marginLeft: "2.3em" }}>Detailed Partner Id</label></Col>
+                    <Col ><Input className="filter-text" style={{ marginLeft: "0.8em", width: 160 }} allowClear id="detailedPartnerId" placeholder="Select detailed partner id" onChange={this.text} value={this.state.detailedPartnerId} /></Col>
 
-                    <Col span={3}><label className="title1" style={{marginLeft:"1.5em"}}>Keyword Category</label></Col>
-                    <Col span={2} style={{marginLeft:"-1.8em"}}><DropDown placeholder={"Select categ..."} id="category" data={this.state.dataCategory1} select={this.select} value={this.state.keywordCategory} /></Col>
+                    <Col><label className="title1" style={{ marginLeft: "2em" }}>Keyword Category</label></Col>
+                    <Col style={{ marginLeft: "0.8em", width: 150 }}><DropDown placeholder={"Select categ..."} id="category" data={this.state.dataCategory1} select={this.select} value={this.state.keywordCategory} /></Col>
 
-                    <Col span={3}><label className="title1" style={{marginLeft:"1em"}}>Keyword SubCategory</label></Col>
-                    <Col span={2} style={{marginLeft:"-0.5em"}}><DropDown placeholder={"Select Sub C..."} id="subCategory" data={this.state.dataSubCategory1} select={this.select} value={this.state.keywordSubcategory} /></Col>
-
-                    <Col span={3}><label className="title1" style={{marginLeft:"1.1em"}}>Scrape Date</label></Col>
-                    <Col span={3} style={{marginLeft:"-5em"}}><DatePicker defaultVal={true} action={this.dateSelect} placeholder="Select Date" id={"scrape_date"} error={this.state.scrapeDateError} checkErrorForScrapeDate={this.checkErrorForScrapeDate} value={this.state.scrapeStartDate, this.state.scrapeEndDate} /></Col>
+                    <Col ><label className="title1" style={{ marginLeft: "2.6em" }}>Keyword SubCategory</label></Col>
+                    <Col style={{ marginLeft: "0.8em" }}><DropDown placeholder={"Select Sub C..."} id="subCategory" data={this.state.dataSubCategory1} select={this.select} value={this.state.keywordSubcategory} /></Col>
 
                     {/* <Col span={2}><label className="title1" style={{marginLeft:"1.2em"}}>Keyword Text</label></Col>
                     <Col span={2}><Input className="filter-text" style={{marginLeft:"-0.5em"}} allowClear id="keywordText" onChange={this.text} value={this.state.keywordText} /></Col> */}
                 </Row>
 
-                <Row style={{marginTop:"1em"}}>
-                    <Col span={22}></Col>
-                    <Col span={1}><Button style={{ backgroundColor: "#0095d9", color: "white",marginLeft:"2.5em" }} onClick={this.showResult}>Search</Button></Col>
+                <Row style={{ marginTop: 15 }}>
+                    <Col span={2}></Col>
+
+                    <Col><label className="title1" style={{ marginLeft: "0em" }}>Partner Name</label></Col>
+                    <Col><Input className="filter-text" style={{ marginLeft: "0.5em", width: 160 }} placeholder="Select partner name" allowClear id="partnerName" onChange={this.text} value={this.state.partnerName} /></Col>
+
+                    <Col ><label className="title1" style={{ marginLeft: "2.4em" }}>Scrape Date</label></Col>
+                    <Col style={{ marginLeft: "3.8em" }}><DatePicker defaultVal={true} action={this.dateSelect} placeholder="Select Date" id={"scrape_date"} error={this.state.scrapeDateError} checkErrorForScrapeDate={this.checkErrorForScrapeDate} value={this.state.scrapeStartDate, this.state.scrapeEndDate} /></Col>
+                      
+                        <Col span={20}></Col>
+
+                    <Col style={{marginTop:"-2.4em", marginLeft:"4.8em"}}><Button style={{ backgroundColor: "#0095d9", color: "white"}} onClick={this.showResult}>Search</Button></Col>
+                    <Col style={{marginTop:"-2.4em"}}><Tooltip placement="right" title="Refresh" ><span style={{ color: "#0095d9", fontSize: "15px", cursor: "pointer", marginLeft: "1em" }} onClick={this.refresh}>Clear All</span></Tooltip></Col>
+
                 </Row>
-                <Row style={{marginTop:"-1em"}}>
+
+                <Row style={{ marginTop: "-1em" }}>
                     <Col span={2}></Col>
                     <Col span={22}>
                         <Divider />
@@ -477,16 +487,16 @@ class DigitalSelf extends React.Component {
                             dataSource={this.state.dataReceivedFromBackend ? this.state.dataReceivedFromBackend : null}
                             pagination={false}
                             bordered
-                            // onRow={(record) => ({
-                            //     onClick: () => (
-                            //        (record.screenshotUrl!=" " && record.screenshotUrl !=null)?
-                            //             window.open(record.screenshotUrl) : null
-                            //     )
-                            // })} 
-                            // onRow={(record) => ({
-                            //     onClick: () => { this.callImage(record.screenshotUrl) }
-                            // })}
-                            />
+                        // onRow={(record) => ({
+                        //     onClick: () => (
+                        //        (record.screenshotUrl!=" " && record.screenshotUrl !=null)?
+                        //             window.open(record.screenshotUrl) : null
+                        //     )
+                        // })} 
+                        // onRow={(record) => ({
+                        //     onClick: () => { this.callImage(record.screenshotUrl) }
+                        // })}
+                        />
                     </Col>
                 </Row>
 
