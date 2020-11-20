@@ -14,6 +14,11 @@ class GetCountries extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
+                if(nextProps.data  != this.props.data){
+                this.setState({
+                    marketData: [],
+                })
+        }
         axios.get(`${process.env.REACT_APP_DOMAIN}/api/v1/stock_status/getCountries/${nextProps.data}`)
             .then(response => {
                 if(response.status === 200){

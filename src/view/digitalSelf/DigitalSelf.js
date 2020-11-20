@@ -3,6 +3,7 @@ import { Row, Col, Divider, Input, Table, Tooltip, Button, Modal, Select, messag
 import { ExclamationCircleFilled, DownloadOutlined } from '@ant-design/icons';
 import "antd/dist/antd.css";
 import './digitalSelf.css';
+import moment from 'moment';
 import DropDown from '../../components/digitalShelfDropdown/dropdown';
 import DatePicker from '../../components/DatePicker/DatePicker';
 import axios from 'axios';
@@ -40,7 +41,7 @@ class DigitalSelf extends React.Component {
             partnerTypeError: false,
             scrapeDateError: false,
             showImage: false,
-            secondRowGap:-7,
+            secondRowGap:-5,
         };
 
         this.columns = [
@@ -220,7 +221,7 @@ class DigitalSelf extends React.Component {
                 country: '',
                 countryDuplicate: 'undefined',
                 partnerTypeError: false,
-                secondRowGap:-7,
+                secondRowGap:-5,
             })
         }
         else if (id === "category") {
@@ -238,7 +239,7 @@ class DigitalSelf extends React.Component {
                 country: value,
                 countryDuplicate: value,
                 partnerType: '',
-                secondRowGap:-7,
+                secondRowGap:-5,
             })
         }
         else if (id === "partnerType") {
@@ -272,17 +273,20 @@ class DigitalSelf extends React.Component {
             partnerTypeError: false,
             marketDuplicate: 'undefined',
             countryDuplicate: 'undefined',
-            secondRowGap:-7,
+            secondRowGap:-5,
         })
     }
 
+    
+    forMandatoryFilled = () => {
+        message.error('Please select all mandatory fields');
+    };
+
     showResult = () => {
 
-        if (this.state.scrapeStartDate == "" || this.state.scrapeEndDate == "") {
-            this.setState({
-                scrapeDateError: true,
-            })
-        }
+        if (this.state.scrapeStartDate == "" || this.state.scrapeEndDate == "" || this.state.market == "" || this.state.country == "" || this.state.partnerType == "") {
+            this.forMandatoryFilled();
+        }  
         else {
             this.setState({
                 spin: true,
@@ -351,12 +355,21 @@ class DigitalSelf extends React.Component {
         }
     }
 
+
     dateSelect = (date, dateString, id) => {
+        var someDateString1 = "", someDateString2 = "";
+
+        if (dateString[0] != "" || dateString[1] != "") {
+            someDateString1 = moment(dateString[0]).format("YYYY-MM-DD");
+            someDateString2 = moment(dateString[1]).format("YYYY-MM-DD");
+        }
         this.setState({
-            scrapeStartDate: dateString[0],
-            scrapeEndDate: dateString[1],
+            // scrapeDate: dateString,
+            scrapeStartDate: someDateString1,
+            scrapeEndDate: someDateString2,
             scrapeDateError: false,
         })
+
     }
 
     handleOk = () => {
@@ -382,7 +395,7 @@ class DigitalSelf extends React.Component {
         if (this.state.marketDuplicate === 'undefined') {
             this.setState({
                 countryError: true,
-                secondRowGap:1,
+                secondRowGap:3,
             })
         }
     }
@@ -391,7 +404,7 @@ class DigitalSelf extends React.Component {
         if (this.state.countryDuplicate === 'undefined') {
             this.setState({
                 partnerTypeError: true,
-                secondRowGap:1,
+                secondRowGap:3,
             })
         }
     }
@@ -417,14 +430,14 @@ class DigitalSelf extends React.Component {
                 <Row style={{ marginTop: "1em" }}>
                     <Col span={2}></Col>
 
-                    <Col><label className="title1" style={{ marginLeft: "0em" }}>Market</label></Col>
-                    <Col style={{ marginLeft: "3.7em" }}><DropDown placeholder={"Select market..."} id="market" data={this.state.dataMarket1} select={this.select} value={this.state.market} /></Col>
+                    <Col style={{marginTop:"-0.3em"}}><label className="title1" style={{ marginLeft: "0em" }}>Market<span className="mandatory-field">*</span></label></Col>
+                    <Col style={{ marginLeft: "3em" }}><DropDown placeholder={"Select market"} id="market" data={this.state.dataMarket1} select={this.select} value={this.state.market} /></Col>
 
-                    <Col><label className="title1" style={{ marginLeft: "2.5em" }}>Country</label></Col>
-                    <Col style={{ marginLeft: "5.5em" }}><GetCountries placeholder={"Select country..."} data={this.state.marketDuplicate} id="country" error={this.state.countryError} checkErrorForCountry={this.checkErrorForCountry} select={this.select} value={this.state.country} /></Col>
+                    <Col style={{marginTop:"-0.3em"}}><label className="title1" style={{ marginLeft: "2.5em" }}>Country<span className="mandatory-field">*</span></label></Col>
+                    <Col style={{ marginLeft: "4.7em" }}><GetCountries placeholder={"Select country"} data={this.state.marketDuplicate} id="country" error={this.state.countryError} checkErrorForCountry={this.checkErrorForCountry} select={this.select} value={this.state.country} /></Col>
 
-                    <Col ><label className="title1" style={{ marginLeft: "2em" }}>Partner Type</label></Col>
-                    <Col style={{ marginLeft: "3.4em" }}><GetPartnerType placeholder={"Select Part...."} data={this.state.countryDuplicate} id="partnerType" error={this.state.partnerTypeError} checkErrorForPartnerType={this.checkErrorForPartnerType} select={this.select} value={this.state.partnerType} /></Col>
+                    <Col style={{marginTop:"-0.3em"}}><label className="title1" style={{ marginLeft: "2em" }}>Partner Type<span className="mandatory-field">*</span></label></Col>
+                    <Col style={{ marginLeft: "2.8em" }}><GetPartnerType placeholder={"Select Partner Type"} data={this.state.countryDuplicate} id="partnerType" error={this.state.partnerTypeError} checkErrorForPartnerType={this.checkErrorForPartnerType} select={this.select} value={this.state.partnerType} /></Col>
 
 
                     <Col><label className="title1" style={{ marginLeft: "2em" }}>Master Partner Id</label></Col>
@@ -438,31 +451,31 @@ class DigitalSelf extends React.Component {
                     <Col ><Input className="filter-text" style={{ marginLeft: "1.8em", width: 160 }} placeholder="Select keyword id" allowClear id="keywordId" onChange={this.text} value={this.state.keywordId} /></Col>
 
                     <Col><label className="title1" style={{ marginLeft: "2.3em" }}>Detailed Partner Id</label></Col>
-                    <Col ><Input className="filter-text" style={{ marginLeft: "0.8em", width: 160 }} allowClear id="detailedPartnerId" placeholder="Select detailed partner id" onChange={this.text} value={this.state.detailedPartnerId} /></Col>
+                    <Col ><Input className="filter-text" style={{ marginLeft: "0.7em", width: 160 }} allowClear id="detailedPartnerId" placeholder="Select detailed partner id" onChange={this.text} value={this.state.detailedPartnerId} /></Col>
 
                     <Col><label className="title1" style={{ marginLeft: "2em" }}>Keyword Category</label></Col>
-                    <Col style={{ marginLeft: "0.8em", width: 150 }}><DropDown placeholder={"Select categ..."} id="category" data={this.state.dataCategory1} select={this.select} value={this.state.keywordCategory} /></Col>
+                    <Col style={{ marginLeft: "0.8em", width: 150 }}><DropDown placeholder={"Select Keyword Category"} id="category" data={this.state.dataCategory1} select={this.select} value={this.state.keywordCategory} /></Col>
 
                     <Col ><label className="title1" style={{ marginLeft: "2.6em" }}>Keyword SubCategory</label></Col>
-                    <Col style={{ marginLeft: "0.8em" }}><DropDown placeholder={"Select Sub C..."} id="subCategory" data={this.state.dataSubCategory1} select={this.select} value={this.state.keywordSubcategory} /></Col>
+                    <Col style={{ marginLeft: "0.8em" }}><DropDown placeholder={"Select Keyword SubCategory"} id="subCategory" data={this.state.dataSubCategory1} select={this.select} value={this.state.keywordSubcategory} /></Col>
 
                     {/* <Col span={2}><label className="title1" style={{marginLeft:"1.2em"}}>Keyword Text</label></Col>
                     <Col span={2}><Input className="filter-text" style={{marginLeft:"-0.5em"}} allowClear id="keywordText" onChange={this.text} value={this.state.keywordText} /></Col> */}
                 </Row>
 
-                <Row style={{ marginTop: 15 }}>
+                <Row style={{ marginTop: 18 }}>
                     <Col span={2}></Col>
 
                     <Col><label className="title1" style={{ marginLeft: "0em" }}>Partner Name</label></Col>
-                    <Col><Input className="filter-text" style={{ marginLeft: "0.5em", width: 160 }} placeholder="Select partner name" allowClear id="partnerName" onChange={this.text} value={this.state.partnerName} /></Col>
+                    <Col><Input className="filter-text" style={{ marginLeft: "0.6em", width: 160 }} placeholder="Select partner name" allowClear id="partnerName" onChange={this.text} value={this.state.partnerName} /></Col>
 
-                    <Col ><label className="title1" style={{ marginLeft: "2.4em" }}>Scrape Date</label></Col>
-                    <Col style={{ marginLeft: "3.8em" }}><DatePicker defaultVal={true} action={this.dateSelect} placeholder="Select Date" id={"scrape_date"} error={this.state.scrapeDateError} checkErrorForScrapeDate={this.checkErrorForScrapeDate} value={this.state.scrapeStartDate, this.state.scrapeEndDate} /></Col>
+                    <Col style={{marginTop:"-0.3em"}}><label className="title1" style={{ marginLeft: "2.4em" }}>Scrape Date<span className="mandatory-field">*</span></label></Col>
+                    <Col style={{ marginLeft: "3em" }}><DatePicker defaultVal={true} action={this.dateSelect} placeholder="Select Scrape Date" id={"scrape_date"} error={this.state.scrapeDateError} checkErrorForScrapeDate={this.checkErrorForScrapeDate} value={this.state.scrapeStartDate, this.state.scrapeEndDate} /></Col>
                       
                         <Col span={20}></Col>
 
                     <Col style={{marginTop:"-2.4em", marginLeft:"4.8em"}}><Button style={{ backgroundColor: "#0095d9", color: "white"}} onClick={this.showResult}>Search</Button></Col>
-                    <Col style={{marginTop:"-2.4em"}}><Tooltip placement="right" title="Refresh" ><span style={{ color: "#0095d9", fontSize: "15px", cursor: "pointer", marginLeft: "1em" }} onClick={this.refresh}>Clear All</span></Tooltip></Col>
+                    <Col style={{marginTop:"-2.4em"}}><Tooltip placement="top" title="Refresh" ><span style={{ color: "#0095d9", fontSize: "15px", cursor: "pointer", marginLeft: "1em" }} onClick={this.refresh}>Clear All</span></Tooltip></Col>
 
                 </Row>
 

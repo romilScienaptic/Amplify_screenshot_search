@@ -49,10 +49,10 @@ class Datepicker extends React.Component{
             return  <Form.Item help={"Please select scrape date"} validateStatus="error"><RangePicker id={this.props.id} onChange={this.onChange}  size={this.state.size}   style={{width:220,border:this.props.validate, borderRadius:this.props.borderRadius}} value={this.state.val !== "" && this.state.val !== undefined ? moment(this.state.val) : null}/></Form.Item> 
         }
         return(this.props.defaultVal === false ?
-            (<RangePicker id={this.props.id}  onChange={this.onChange} size={this.state.size}  disabledDate={this.disabledDate} style={{width:220,border:this.props.validate, borderRadius:this.props.borderRadius}}  value={this.state.val !== "" ? [moment(this.state.startDate),moment(this.state.endDate) ] : null}/>)
+            (<RangePicker id={this.props.id}  onChange={this.onChange} size={this.state.size}  disabledDate={this.disabledDate} style={{width:220,border:this.props.validate, borderRadius:this.props.borderRadius}} format={dateFormat}  value={this.state.val !== "" ? [moment(this.state.startDate),moment(this.state.endDate) ] : null}/>)
             :(<RangePicker id={this.props.id} onChange={this.onChange}  size={this.state.size}   onCalendarChange={(val) => {this.setState({
                 dates:val,
-            })}} disabledDate={this.disabledDate} style={{width:220,border:this.props.validate, borderRadius:this.props.borderRadius}} value={this.state.val !== "" && this.state.val !== undefined ? [moment(this.state.startDate),moment(this.state.endDate) ] : null}/>)
+            })}} disabledDate={this.disabledDate} style={{width:220,border:this.props.validate, borderRadius:this.props.borderRadius}} format={dateFormat} value={this.state.val !== "" && this.state.val !== undefined ? [moment(this.state.startDate),moment(this.state.endDate) ] : null}/>)
         );
     }
 }

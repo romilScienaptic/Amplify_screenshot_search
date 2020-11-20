@@ -34,3 +34,11 @@ thead[class*="ant-table-thead"] th{
   margin-left:12px;
   font-size: larger;
 }
+
+.mandatory-field{
+  color:red;
+  font-size: 1.3em;
+  margin-left:2px;
+}
+
+

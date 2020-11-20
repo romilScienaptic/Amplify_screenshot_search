@@ -27,7 +27,7 @@ class Dropdown extends React.Component {
               return(
                 <Select style={{ width: 160}}  defaultValue={this.props.defaultValue} style={{ width: 160}}  showSearch onChange={this.handleChange} placeholder={this.props.placeholder} value={this.state.val}>
                 {
-                     <Option style={{ width: 160, height:70}}><Spin style={{ marginTop:25,marginLeft:"5em" }}/></Option>
+                     <Option style={{ width: 160, height:70}}><Spin style={{ marginTop:25,marginLeft:"4em" }}/></Option>
                 }
            </Select>
               )

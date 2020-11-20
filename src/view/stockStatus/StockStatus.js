@@ -1,9 +1,10 @@
 import React from 'react';
-import { Row, Col, Divider, Input, Table, Tooltip, Button, Modal, Form, Select,message, Space , Cascader} from 'antd';
-import { ExclamationCircleFilled,DownloadOutlined } from '@ant-design/icons';
+import { Row, Col, Divider, Input, Table, Tooltip, Button, Modal, Form, Select, message, Space, Cascader } from 'antd';
+import { ExclamationCircleFilled, DownloadOutlined } from '@ant-design/icons';
 import "antd/dist/antd.css";
 import './StockStatus.css';
 import axios from 'axios';
+import moment from 'moment';
 import DropDown from '../../components/Dropdown/Dropdown';
 import DatePicker from '../../components/DatePicker/DatePicker';
 import GetCountries from '../../components/getCountries/GetCountries';
@@ -18,7 +19,7 @@ import GetPartnerType from '../../components/getPartnerType/GetPartnerType';
 //         {
 //           value: 'MP',
 //           label: 'MP',  
-          
+
 //           children: [
 //             {
 //               value: 'bhopal',
@@ -37,7 +38,7 @@ import GetPartnerType from '../../components/getPartnerType/GetPartnerType';
 //         {
 //             value: 'UP',
 //             label: 'UP',  
-            
+
 //             children: [
 //               {
 //                 value: 'city1',
@@ -56,7 +57,7 @@ import GetPartnerType from '../../components/getPartnerType/GetPartnerType';
 //           {
 //             value: 'Maharastra',
 //             label: 'Maharastra',  
-            
+
 //             children: [
 //               {
 //                 value: 'city11',
@@ -80,12 +81,12 @@ import GetPartnerType from '../../components/getPartnerType/GetPartnerType';
 //     {
 //         value: 'US',
 //         label: 'US',
-  
+
 //         children: [
 //           {
 //             value: 'washington',
 //             label: 'washington',  
-            
+
 //             children: [
 //               {
 //                 value: 'bhopal',
@@ -104,7 +105,7 @@ import GetPartnerType from '../../components/getPartnerType/GetPartnerType';
 //           {
 //               value: 'UP',
 //               label: 'UP',  
-              
+
 //               children: [
 //                 {
 //                   value: 'city1',
@@ -123,7 +124,7 @@ import GetPartnerType from '../../components/getPartnerType/GetPartnerType';
 //             {
 //               value: 'Maharastra',
 //               label: 'Maharastra',  
-              
+
 //               children: [
 //                 {
 //                   value: 'city11',
@@ -139,11 +140,11 @@ import GetPartnerType from '../../components/getPartnerType/GetPartnerType';
 //                 },
 //               ],
 //             },
-  
+
 //         ],
 //       },
 //   ];
-  
+
 
 const { Option } = Select;
 class StockStatus extends React.Component {
@@ -176,8 +177,8 @@ class StockStatus extends React.Component {
             spin: false,
             higherRecordLength: false,
             showImage: false,
-            secondRowGap:0,
-          //  options:options,
+            secondRowGap: 0,
+            //  options:options,
         };
 
         this.columns = [
@@ -188,8 +189,8 @@ class StockStatus extends React.Component {
                 render: (text) => {
                     if (text != " " && text != "" && text != null)
                         return <div>
-                            <label style={{ cursor: "pointer", color: "#0095d9" }} onClick={()=>{this.callImage(text) }}>Click Here</label>
-                            <a href={`data:image/png;base64,${text}`} download={"stock_status"}><DownloadOutlined className="icon"/></a>
+                            <label style={{ cursor: "pointer", color: "#0095d9" }} onClick={() => { this.callImage(text) }}>Click Here</label>
+                            <a href={`data:image/png;base64,${text}`} download={"stock_status"}><DownloadOutlined className="icon" /></a>
                         </div>
 
                     else
@@ -287,7 +288,7 @@ class StockStatus extends React.Component {
                         })
                     }
                 }
-                else{
+                else {
                     this.error();
                 }
                 this.setState({
@@ -297,14 +298,18 @@ class StockStatus extends React.Component {
                     dataCountry1: dataCountry,
                 })
             })
-             .catch(err => {
-                    this.error();
-                });
+            .catch(err => {
+                this.error();
+            });
     }
 
     error = () => {
         message.error('something went wrong! Please try agian');
-      };
+    };
+
+    forMandatoryFilled = () => {
+        message.error('Please select all mandatory fields');
+    };
 
     text = (event) => {
 
@@ -340,7 +345,7 @@ class StockStatus extends React.Component {
                 country: '',
                 countryDuplicate: 'undefined',
                 partnerTypeError: false,
-                secondRowGap:0,
+                secondRowGap: 0,
             })
         }
         else if (id === "category") {
@@ -358,7 +363,7 @@ class StockStatus extends React.Component {
                 country: value,
                 countryDuplicate: value,
                 partnerType: '',
-                secondRowGap:0,
+                secondRowGap: 0,
             })
         }
         else if (id === "partnerType") {
@@ -391,17 +396,15 @@ class StockStatus extends React.Component {
             partnerTypeError: false,
             marketDuplicate: 'undefined',
             countryDuplicate: 'undefined',
-            secondRowGap:0,
+            secondRowGap: 0,
         })
     }
 
     showResult = () => {
 
-        if (this.state.scrapeStartDate == "" || this.state.scrapeEndDate == "") {
-            this.setState({
-                scrapeDateError: true,
-            })
-        }
+        if (this.state.scrapeStartDate == "" || this.state.scrapeEndDate == "" || this.state.market == "" || this.state.country == "" || this.state.partnerType == "") {
+            this.forMandatoryFilled();
+        }   
         else {
             this.setState({
                 spin: true,
@@ -457,7 +460,7 @@ class StockStatus extends React.Component {
                                 })
                             }
                         }
-                        else{
+                        else {
                             this.error();
                         }
                     })
@@ -467,10 +470,16 @@ class StockStatus extends React.Component {
     }
 
     dateSelect = (date, dateString, id) => {
+        var someDateString1 = "", someDateString2 = "";
+
+        if (dateString[0] != "" || dateString[1] != "") {
+            someDateString1 = moment(dateString[0]).format("YYYY-MM-DD");
+            someDateString2 = moment(dateString[1]).format("YYYY-MM-DD");
+        }
         this.setState({
             // scrapeDate: dateString,
-            scrapeStartDate: dateString[0],
-            scrapeEndDate: dateString[1],
+            scrapeStartDate: someDateString1,
+            scrapeEndDate: someDateString2,
             scrapeDateError: false,
         })
 
@@ -503,7 +512,7 @@ class StockStatus extends React.Component {
         if (this.state.marketDuplicate === 'undefined') {
             this.setState({
                 countryError: true,
-                secondRowGap:8,
+                secondRowGap: 8,
             })
         }
     }
@@ -512,7 +521,7 @@ class StockStatus extends React.Component {
         if (this.state.countryDuplicate === 'undefined') {
             this.setState({
                 partnerTypeError: true,
-                secondRowGap:8,
+                secondRowGap: 8,
             })
         }
     }
@@ -535,8 +544,8 @@ class StockStatus extends React.Component {
                     <Col span={2}></Col>
                     <label className="title1">STOCK STATUS FILTERS</label>
                     <Col span={16}></Col>
-                    <Col><Button style={{ backgroundColor: "#0095d9", color: "white",marginLeft:"2em", marginTop:"-1em" }} onClick={this.showResult}>Search</Button></Col>
-                    <Col style={{marginTop:"-0.2em"}}><Tooltip placement="top" title="Refresh"><span style={{ color: "#0095d9", fontSize: "15px", cursor: "pointer", marginLeft: "1em"}} onClick={this.refresh}>Clear All</span></Tooltip></Col>
+                    <Col><Button style={{ backgroundColor: "#0095d9", color: "white", marginLeft: "2em", marginTop: "-1em" }} onClick={this.showResult}>Search</Button></Col>
+                    <Col style={{ marginTop: "-0.2em" }}><Tooltip placement="top" title="Refresh"><span style={{ color: "#0095d9", fontSize: "15px", cursor: "pointer", marginLeft: "1em" }} onClick={this.refresh}>Clear All</span></Tooltip></Col>
                 </Row>
 
                 <Row style={{ marginTop: "1em" }}>
@@ -549,17 +558,17 @@ class StockStatus extends React.Component {
         changeOnSelect
       /> */}
 
-                    <Col><label className="title1" style={{ marginLeft: "0em" }}>Market</label></Col>
-                    <Col style={{ marginLeft: "3.2em"}}><DropDown placeholder={"Select market..."} data={this.state.dataMarket1} id="market" select={this.select} value={this.state.market} /></Col>
+                    <Col style={{marginTop:"-0.3em"}}><label className="title1" style={{ marginLeft: "0em" }}>Market<span className="mandatory-field">*</span></label></Col>
+                    <Col style={{ marginLeft: "2.5em" }}><DropDown placeholder={"Select market"} data={this.state.dataMarket1} id="market" select={this.select} value={this.state.market} /></Col>
 
-                    <Col ><label className="title1" style={{ marginLeft: "2em" }}>Country</label></Col>
-                    <Col style={{ marginLeft: "1.4em" }}><GetCountries placeholder={"Select country..."} data={this.state.marketDuplicate} id="country" error={this.state.countryError} checkErrorForCountry={this.checkErrorForCountry} select={this.select} value={this.state.country} /></Col>
+                    <Col style={{marginTop:"-0.3em"}}><label className="title1" style={{ marginLeft: "2em" }}>Country<span className="mandatory-field">*</span></label></Col>
+                    <Col style={{ marginLeft: "0.8em" }}><GetCountries placeholder={"Select country"} data={this.state.marketDuplicate} id="country" error={this.state.countryError} checkErrorForCountry={this.checkErrorForCountry} select={this.select} value={this.state.country} /></Col>
 
-                    <Col ><label className="title1" style={{ marginLeft: "2em" }}>Partner Type</label></Col>
-                    <Col style={{ marginLeft: "1.4em" }}><GetPartnerType placeholder={"Select Part...."} data={this.state.countryDuplicate} id="partnerType" error={this.state.partnerTypeError} checkErrorForPartnerType={this.checkErrorForPartnerType} select={this.select} value={this.state.partnerType} /></Col>
+                    <Col style={{marginTop:"-0.3em"}}><label className="title1" style={{ marginLeft: "2em" }}>Partner Type<span className="mandatory-field">*</span></label></Col>
+                    <Col style={{ marginLeft: "0.6em" }}><GetPartnerType placeholder={"Select Partner Type"} data={this.state.countryDuplicate} id="partnerType" error={this.state.partnerTypeError} checkErrorForPartnerType={this.checkErrorForPartnerType} select={this.select} value={this.state.partnerType} /></Col>
 
                     <Col><label className="title1" style={{ marginLeft: "2em" }}>Partner Name</label></Col>
-                    <Col><Input className="filter-text" style={{ marginLeft: "1em", width:215 }} placeholder="Select partner name" allowClear id="partnerName" onChange={this.text} value={this.state.partnerName} /></Col>
+                    <Col><Input className="filter-text" style={{ marginLeft: "1em", width: 215 }} placeholder="Select partner name" allowClear id="partnerName" onChange={this.text} value={this.state.partnerName} /></Col>
 
                     {/* <Col span={2}><label className="title1" style={{marginLeft:"-0.5em"}} >Master Partner Id</label></Col>
                     <Col span={2}><Input className="filter-text" allowClear id="masterPartnerId" onChange={this.text} value={this.state.masterPartnerId} /></Col>
@@ -572,19 +581,19 @@ class StockStatus extends React.Component {
                     <Col span={2}></Col>
 
                     <Col><label className="title1" style={{ marginLeft: "0em" }}>MPN Model</label></Col>
-                    <Col><Input className="filter-text" style={{marginLeft:"1em",width:190}}allowClear id="mpnModel" placeholder="Select MPN model" onChange={this.text} value={this.state.mpnModel} /></Col>
+                    <Col><Input className="filter-text" style={{ marginLeft: "1em", width: 190 }} allowClear id="mpnModel" placeholder="Select MPN model" onChange={this.text} value={this.state.mpnModel} /></Col>
 
                     <Col ><label className="title1" style={{ marginLeft: "1.9em" }}>Category</label></Col>
-                    <Col style={{ marginLeft: "1em" }}><DropDown placeholder={"Select categ..."} data={this.state.dataCategory1} id="category" select={this.select} value={this.state.category} /></Col>
+                    <Col style={{ marginLeft: "1em" }}><DropDown placeholder={"Select category"} data={this.state.dataCategory1} id="category" select={this.select} value={this.state.category} /></Col>
 
                     <Col><label className="title1" style={{ marginLeft: "2em" }}>Sub Category</label></Col>
-                    <Col style={{ marginLeft: "1em" }}><DropDown placeholder={"Select Sub C..."} id="subCategory" data={this.state.dataSubCategory1} select={this.select} value={this.state.subCategory} /></Col>
+                    <Col style={{ marginLeft: "1em" }}><DropDown placeholder={"Select Sub Category"} id="subCategory" data={this.state.dataSubCategory1} select={this.select} value={this.state.subCategory} /></Col>
 
-                    <Col><label className="title1" style={{ marginLeft: "2em" }}>Scrape Date</label></Col>
-                    <Col style={{ marginLeft: "1.8em" }}><DatePicker defaultVal={true} action={this.dateSelect} placeholder="Select Date" id={"scrape_date"} error={this.state.scrapeDateError} checkErrorForScrapeDate={this.checkErrorForScrapeDate} value={this.state.scrapeStartDate, this.state.scrapeEndDate} /></Col>
+                    <Col style={{marginTop:"-0.3em"}}><label className="title1" style={{ marginLeft: "2em" }}>Scrape Date<span className="mandatory-field">*</span></label></Col>
+                    <Col style={{ marginLeft: "1.1em" }}><DatePicker defaultVal={true} action={this.dateSelect} placeholder="Select Scrape Date" id={"scrape_date"} error={this.state.scrapeDateError} checkErrorForScrapeDate={this.checkErrorForScrapeDate} value={this.state.scrapeStartDate, this.state.scrapeEndDate} /></Col>
                 </Row>
 
-                <Row style={{marginTop:"-0.1em"}}>
+                <Row style={{ marginTop: "-0.1em" }}>
                     <Col span={2}></Col>
                     <Col span={22}>
                         <Divider />
@@ -604,14 +613,14 @@ class StockStatus extends React.Component {
                             dataSource={this.state.dataReceivedFromBackend ? this.state.dataReceivedFromBackend : null}
                             pagination={false}
                             bordered
-                            // onRow={(record) => ({ onClick: () => (
-                            //     (record.screenshotUrl!=" " && record.screenshotUrl !=null)?
-                            //     window.open(record.screenshotUrl) :null
-                            //  ) })}
+                        // onRow={(record) => ({ onClick: () => (
+                        //     (record.screenshotUrl!=" " && record.screenshotUrl !=null)?
+                        //     window.open(record.screenshotUrl) :null
+                        //  ) })}
 
-                            // onRow={(record) => ({
-                            //     onClick: () => { this.callImage(record.screenshotUrl) }
-                            // })}
+                        // onRow={(record) => ({
+                        //     onClick: () => { this.callImage(record.screenshotUrl) }
+                        // })}
                         />
                     </Col>
                 </Row>

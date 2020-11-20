@@ -14,6 +14,11 @@ class getPartnerType extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
+        if(nextProps.data  != this.props.data){
+            this.setState({
+                partnerData: [],
+            })
+    }
         axios.get(`${process.env.REACT_APP_DOMAIN}/api/v1/digital_shelf/getPartnerType/${nextProps.data}`)
             .then(response => {
                 if(response.status === 200){
@@ -57,7 +62,7 @@ class getPartnerType extends React.PureComponent {
             return (
                 <Select style={{ width: 160,marginBottom:"1.8em"  }} defaultValue={this.props.defaultValue} style={{ width: 160 }} showSearch onChange={this.handleChange} placeholder={this.props.placeholder} value={this.state.val}>
                     {
-                         <Option style={{ width: 160, height:70}}><Spin style={{ marginTop:25,marginLeft:"5em"   }}/></Option>
+                         <Option style={{ width: 160, height:70}}><Spin style={{ marginTop:25,marginLeft:"4em"  }}/></Option>
                     }
                 </Select>
             )
