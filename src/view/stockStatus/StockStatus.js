@@ -464,7 +464,16 @@ class StockStatus extends React.Component {
                             this.error();
                         }
                     })
-                    .catch(err => err);
+                    .catch(err => {
+                        if(err.response.data.status === 413){
+                            this.setState({
+                                higherRecordLength: true,
+                            })
+                        }
+                        else{
+                         this.error();
+                        }
+                    });
             })
         }
     }
@@ -585,6 +594,7 @@ class StockStatus extends React.Component {
 
                     <Col ><label className="title1" style={{ marginLeft: "1.9em" }}>Category</label></Col>
                     <Col style={{ marginLeft: "1em" }}><DropDown placeholder={"Select category"} data={this.state.dataCategory1} id="category" select={this.select} value={this.state.category} /></Col>
+
 
                     <Col><label className="title1" style={{ marginLeft: "2em" }}>Sub Category</label></Col>
                     <Col style={{ marginLeft: "1em" }}><DropDown placeholder={"Select Sub Category"} id="subCategory" data={this.state.dataSubCategory1} select={this.select} value={this.state.subCategory} /></Col>

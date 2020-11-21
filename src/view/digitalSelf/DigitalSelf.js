@@ -49,6 +49,7 @@ class DigitalSelf extends React.Component {
                 title: "Screenshot",
                 dataIndex: 'screenshotUrl',
                 key: 'screenshotUrl',
+                width:150,
                 render: (text) => {
                     if (text != " " && text != "" && text != null)
                         return <div>
@@ -349,7 +350,14 @@ class DigitalSelf extends React.Component {
                         }
                     })
                     .catch(err => {
-                        this.error();
+                        if(err.response.data.status === 413){
+                            this.setState({
+                                higherRecordLength: true,
+                            })
+                        }
+                        else{
+                         this.error();
+                        }
                     });
             })
         }
