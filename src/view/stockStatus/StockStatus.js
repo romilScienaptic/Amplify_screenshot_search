@@ -177,7 +177,7 @@ class StockStatus extends React.Component {
             spin: false,
             higherRecordLength: false,
             showImage: false,
-            secondRowGap: 0,
+            secondRowGap: -10,
             //  options:options,
         };
 
@@ -345,7 +345,7 @@ class StockStatus extends React.Component {
                 country: '',
                 countryDuplicate: 'undefined',
                 partnerTypeError: false,
-                secondRowGap: 0,
+                secondRowGap: -10,
             })
         }
         else if (id === "category") {
@@ -363,7 +363,7 @@ class StockStatus extends React.Component {
                 country: value,
                 countryDuplicate: value,
                 partnerType: '',
-                secondRowGap: 0,
+                secondRowGap: -10,
             })
         }
         else if (id === "partnerType") {
@@ -396,7 +396,7 @@ class StockStatus extends React.Component {
             partnerTypeError: false,
             marketDuplicate: 'undefined',
             countryDuplicate: 'undefined',
-            secondRowGap: 0,
+            secondRowGap: -10,
         })
     }
 
@@ -590,7 +590,7 @@ class StockStatus extends React.Component {
                     <Col span={2}></Col>
 
                     <Col><label className="title1" style={{ marginLeft: "0em" }}>MPN Model</label></Col>
-                    <Col><Input className="filter-text" style={{ marginLeft: "1em", width: 190 }} allowClear id="mpnModel" placeholder="Select MPN model" onChange={this.text} value={this.state.mpnModel} /></Col>
+                    <Col><Input className="filter-text" style={{ marginLeft: "1em", width: 190 ,marginTop:1}} allowClear id="mpnModel" placeholder="Select MPN model" onChange={this.text} value={this.state.mpnModel} /></Col>
 
                     <Col ><label className="title1" style={{ marginLeft: "1.9em" }}>Category</label></Col>
                     <Col style={{ marginLeft: "1em" }}><DropDown placeholder={"Select category"} data={this.state.dataCategory1} id="category" select={this.select} value={this.state.category} /></Col>

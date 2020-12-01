@@ -61,7 +61,7 @@ class GetCountries extends React.PureComponent {
             return (
                 <Select style={{ width: 190,marginBottom:"1.8em" }} defaultValue={this.props.defaultValue} style={{ width: 190 }} showSearch onChange={this.handleChange} placeholder={this.props.placeholder} value={this.state.val}>
                     {
-                         <Option style={{ width: 190, height:70}}><Spin style={{  marginTop:25,marginLeft:"5em"  }}/></Option>
+                         <Option style={{ width: 190, height:70, pointerEvents: "none"}}><Spin style={{  marginTop:25,marginLeft:"5em"  }}/></Option>
                     }
                 </Select>
             )

@@ -41,7 +41,7 @@ class DigitalSelf extends React.Component {
             partnerTypeError: false,
             scrapeDateError: false,
             showImage: false,
-            secondRowGap:-5,
+            secondRowGap:-9,
         };
 
         this.columns = [
@@ -222,7 +222,7 @@ class DigitalSelf extends React.Component {
                 country: '',
                 countryDuplicate: 'undefined',
                 partnerTypeError: false,
-                secondRowGap:-5,
+                secondRowGap:-9,
             })
         }
         else if (id === "category") {
@@ -240,7 +240,7 @@ class DigitalSelf extends React.Component {
                 country: value,
                 countryDuplicate: value,
                 partnerType: '',
-                secondRowGap:-5,
+                secondRowGap:-9,
             })
         }
         else if (id === "partnerType") {
@@ -274,7 +274,7 @@ class DigitalSelf extends React.Component {
             partnerTypeError: false,
             marketDuplicate: 'undefined',
             countryDuplicate: 'undefined',
-            secondRowGap:-5,
+            secondRowGap:-9,
         })
     }
 
@@ -403,7 +403,7 @@ class DigitalSelf extends React.Component {
         if (this.state.marketDuplicate === 'undefined') {
             this.setState({
                 countryError: true,
-                secondRowGap:3,
+                secondRowGap:5,
             })
         }
     }
@@ -412,7 +412,7 @@ class DigitalSelf extends React.Component {
         if (this.state.countryDuplicate === 'undefined') {
             this.setState({
                 partnerTypeError: true,
-                secondRowGap:3,
+                secondRowGap:5,
             })
         }
     }
@@ -439,7 +439,7 @@ class DigitalSelf extends React.Component {
                     <Col span={2}></Col>
 
                     <Col style={{marginTop:"-0.3em"}}><label className="title1" style={{ marginLeft: "0em" }}>Market<span className="mandatory-field">*</span></label></Col>
-                    <Col style={{ marginLeft: "3em" }}><DropDown placeholder={"Select market"} id="market" data={this.state.dataMarket1} select={this.select} value={this.state.market} /></Col>
+                    <Col style={{ marginLeft: "3em",marginTop:-2 }}><DropDown placeholder={"Select market"} id="market" data={this.state.dataMarket1} select={this.select} value={this.state.market} /></Col>
 
                     <Col style={{marginTop:"-0.3em"}}><label className="title1" style={{ marginLeft: "2.5em" }}>Country<span className="mandatory-field">*</span></label></Col>
                     <Col style={{ marginLeft: "4.7em" }}><GetCountries placeholder={"Select country"} data={this.state.marketDuplicate} id="country" error={this.state.countryError} checkErrorForCountry={this.checkErrorForCountry} select={this.select} value={this.state.country} /></Col>
@@ -462,10 +462,10 @@ class DigitalSelf extends React.Component {
                     <Col ><Input className="filter-text" style={{ marginLeft: "0.7em", width: 160 }} allowClear id="detailedPartnerId" placeholder="Select detailed partner id" onChange={this.text} value={this.state.detailedPartnerId} /></Col>
 
                     <Col><label className="title1" style={{ marginLeft: "2em" }}>Keyword Category</label></Col>
-                    <Col style={{ marginLeft: "0.8em", width: 150 }}><DropDown placeholder={"Select Keyword Category"} id="category" data={this.state.dataCategory1} select={this.select} value={this.state.keywordCategory} /></Col>
+                    <Col style={{ marginLeft: "0.8em", width: 150,marginTop:-3 }}><DropDown placeholder={"Select Keyword Category"} id="category" data={this.state.dataCategory1} select={this.select} value={this.state.keywordCategory} /></Col>
 
                     <Col ><label className="title1" style={{ marginLeft: "2.6em" }}>Keyword SubCategory</label></Col>
-                    <Col style={{ marginLeft: "0.8em" }}><DropDown placeholder={"Select Keyword SubCategory"} id="subCategory" data={this.state.dataSubCategory1} select={this.select} value={this.state.keywordSubcategory} /></Col>
+                    <Col style={{ marginLeft: "0.8em",marginTop:-3 }}><DropDown placeholder={"Select Keyword SubCategory"} id="subCategory" data={this.state.dataSubCategory1} select={this.select} value={this.state.keywordSubcategory} /></Col>
 
                     {/* <Col span={2}><label className="title1" style={{marginLeft:"1.2em"}}>Keyword Text</label></Col>
                     <Col span={2}><Input className="filter-text" style={{marginLeft:"-0.5em"}} allowClear id="keywordText" onChange={this.text} value={this.state.keywordText} /></Col> */}
@@ -478,7 +478,7 @@ class DigitalSelf extends React.Component {
                     <Col><Input className="filter-text" style={{ marginLeft: "0.6em", width: 160 }} placeholder="Select partner name" allowClear id="partnerName" onChange={this.text} value={this.state.partnerName} /></Col>
 
                     <Col style={{marginTop:"-0.3em"}}><label className="title1" style={{ marginLeft: "2.4em" }}>Scrape Date<span className="mandatory-field">*</span></label></Col>
-                    <Col style={{ marginLeft: "3em" }}><DatePicker defaultVal={true} action={this.dateSelect} placeholder="Select Scrape Date" id={"scrape_date"} error={this.state.scrapeDateError} checkErrorForScrapeDate={this.checkErrorForScrapeDate} value={this.state.scrapeStartDate, this.state.scrapeEndDate} /></Col>
+                    <Col style={{ marginLeft: "3em",marginTop:-3 }}><DatePicker defaultVal={true} action={this.dateSelect} placeholder="Select Scrape Date" id={"scrape_date"} error={this.state.scrapeDateError} checkErrorForScrapeDate={this.checkErrorForScrapeDate} value={this.state.scrapeStartDate, this.state.scrapeEndDate} /></Col>
                       
                         <Col span={20}></Col>
 
