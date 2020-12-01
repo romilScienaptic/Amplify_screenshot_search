@@ -304,11 +304,11 @@ class StockStatus extends React.Component {
     }
 
     error = () => {
-        message.error('something went wrong! Please try agian');
+        message.error('Something went wrong! Please try agian later');
     };
 
     forMandatoryFilled = () => {
-        message.error('Please select all mandatory fields');
+        message.error('Please select all mandatory filters');
     };
 
     text = (event) => {
@@ -615,7 +615,7 @@ class StockStatus extends React.Component {
                     <Col span={2}></Col>
                     <label className="title1">STOCK STATUS LIST</label>
                 </Row>
-                <Row style={{ marginTop: "1em" }}>
+                <Row style={{ marginTop: "1em", marginBottom:20 }}>
                     <Col span={2}></Col>
                     <Col span={22}>
                         <Table columns={this.columns}
@@ -646,7 +646,7 @@ class StockStatus extends React.Component {
                             Ok
                         </Button>,
                     ]}><h3 className="waring-promt"><ExclamationCircleFilled className="icon-warning-sign" /> Please choose more filters.<div className="text-margin">The number of rows are too many to display.</div></h3></Modal>
-
+             
             </div>
         )
     }

@@ -31,11 +31,11 @@ class App extends React.Component {
           <Row>
             <Col span={6} style={{ marginTop: "2%", marginBottom: "2%" }}><img src={HPLogo} style={{ width: "4em" }} alt="Hp logo" /><span style={{ color: "#0095d9", fontWeight: 600, fontSize: "16px", marginLeft: "2%" }}>Amplify Screenshot Search</span></Col>
             <Col span={14}></Col>
-            <Col span={4}><h3 className="welcome-name">Welcome: { this.state.name}</h3></Col>
+            <Col span={4}><h3 className="welcome-name">Welcome: {this.state.name}</h3></Col>
           </Row>
           <Switch>
             <Route path="/" exact component={Tab} />
-            <Route path="/screenshot/:id" exact component={screenShot} />
+            {/* <Route path="/screenshot/:id" exact component={screenShot} /> */}
           </Switch>
         </Router>
       </div>

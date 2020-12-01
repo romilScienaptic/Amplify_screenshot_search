@@ -175,7 +175,7 @@ class DigitalSelf extends React.Component {
     }
 
     error = () => {
-        message.error('something went wrong! Please try agian');
+        message.error('Something went wrong! Please try agian later');
     };
 
     text = (event) => {
@@ -280,7 +280,7 @@ class DigitalSelf extends React.Component {
 
     
     forMandatoryFilled = () => {
-        message.error('Please select all mandatory fields');
+        message.error('Please select all mandatory filters');
     };
 
     showResult = () => {
@@ -403,7 +403,7 @@ class DigitalSelf extends React.Component {
         if (this.state.marketDuplicate === 'undefined') {
             this.setState({
                 countryError: true,
-                secondRowGap:5,
+                secondRowGap:8,
             })
         }
     }
@@ -412,7 +412,7 @@ class DigitalSelf extends React.Component {
         if (this.state.countryDuplicate === 'undefined') {
             this.setState({
                 partnerTypeError: true,
-                secondRowGap:5,
+                secondRowGap:8,
             })
         }
     }
@@ -500,7 +500,7 @@ class DigitalSelf extends React.Component {
                     <label className="title1">DIGITAL SHELF LIST</label>
                 </Row>
 
-                <Row style={{ marginTop: "1em" }}>
+                <Row style={{ marginTop: "1em", marginBottom:20 }}>
                     <Col span={2}></Col>
                     <Col span={22}>
                         <Table columns={this.columns}
