@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import 'antd/dist/antd.css';
 import { Select, Spin, Input, Form,message } from 'antd';
 
 const { Option } = Select;
@@ -50,25 +51,25 @@ class getCountries extends React.PureComponent {
 
     render() {
         if (this.props.data == 'undefined' && this.props.error === false) {
-           return <Form.Item validateStatus={'none'} onClick={()=>{this.props.checkErrorForCountry()}}><Input className="filter-text" style={{ width:160 }} placeholder={this.props.placeholder}/></Form.Item>
+           return <Form.Item validateStatus={'none'} onClick={()=>{this.props.checkErrorForCountry()}}><Input className="filter-text" style={{ width:190 }} placeholder={this.props.placeholder}/></Form.Item>
         }
 
        else if (this.props.data == 'undefined' && this.props.error === true) {
-            return  <Form.Item help={"Please choose market"} validateStatus="error"><Input className="filter-text" style={{ width:160 }} placeholder={this.props.placeholder}/></Form.Item> 
+            return  <Form.Item help={"Please choose market"} validateStatus="error"><Input className="filter-text" style={{ width:190}} placeholder={this.props.placeholder}/></Form.Item> 
          }
 
        else if (this.state.marketData.length <= 0 && this.props.data != 'undefined') {
             return (
-                <Select style={{ width:160,marginBottom:"1.8em" }} defaultValue={this.props.defaultValue} style={{ width:160 }} showSearch onChange={this.handleChange} placeholder={this.props.placeholder} value={this.state.val}>
+                <Select style={{ width:190,marginBottom:"1.8em" }} defaultValue={this.props.defaultValue} style={{ width:190 }} showSearch onChange={this.handleChange} placeholder={this.props.placeholder} value={this.state.val}>
                     {
-                         <Option style={{ width:160, height:70, pointerEvents: "none"}}><Spin style={{marginTop:25,marginLeft:"4em"}}/></Option>
+                         <Option style={{ width:190, height:70, pointerEvents: "none"}}><Spin style={{marginTop:25,marginLeft:"4em"}}/></Option>
                     }
                 </Select>
             )
         }
         else {
             return (
-                <Select defaultValue={this.props.defaultValue} style={{ width:160,marginBottom:"1.8em"  }} showSearch onChange={this.handleChange} placeholder={this.props.placeholder} value={this.state.val}>
+                <Select defaultValue={this.props.defaultValue} style={{ width:190,marginBottom:"1.8em"  }} showSearch onChange={this.handleChange} placeholder={this.props.placeholder} value={this.state.val}>
                     {
                         this.state.marketData.map((data, i) => {
                             return (

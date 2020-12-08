@@ -2,7 +2,7 @@ import React from 'react';
 import { Row, Col, Divider, Input, Table, Tooltip, Button, Modal, Form, Select, message, Space, Cascader } from 'antd';
 import { ExclamationCircleFilled, DownloadOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
-import './StockStatus.css';
+import './BestPractise.css';
 import axios from 'axios';
 import moment from 'moment';
 import DatePicker from '../../components/DatePicker/DatePicker';
@@ -14,7 +14,7 @@ import GetCategory from '../../components/stockStatus/getCategory/GetCategory';
 import GetPartnerName from '../../components/stockStatus/getPartnerName/getPartnerName';
 
 const { Option } = Select;
-class StockStatus extends React.Component {
+class BestPractise extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -54,11 +54,10 @@ class StockStatus extends React.Component {
             countryError: false,
             subCategoryError: false,
             partnerTypeError: false,
-            partnerNameError: false,
             scrapeDateError: false,
             categoryError: false,
+            partnerNameError:false,
             allFiltersFilled: false,
-
         };
 
         this.columns = [
@@ -70,7 +69,7 @@ class StockStatus extends React.Component {
                     if (text != " " && text != "" && text != null)
                         return <div>
                             <label style={{ cursor: "pointer", color: "#0095d9" }} onClick={() => { this.callImage(text) }}>Click Here</label>
-                            <a href={`data:image/png;base64,${text}`} download={"stock_status"}><DownloadOutlined className="icon" /></a>
+                            <a href={`data:image/png;base64,${text}`} download={"best_practices"}><DownloadOutlined className="icon" /></a>
                         </div>
 
                     else
@@ -143,7 +142,7 @@ class StockStatus extends React.Component {
 
     componentDidMount() {
         let dataCategory = [], dataSubCategory = [], dataMarket = [], dataCountry = [];
-        axios.get(process.env.REACT_APP_DOMAIN + '/api/v1/stock_status/filter_data')
+        axios.get(process.env.REACT_APP_DOMAIN + '/api/v1/best_practices/filter_data')
             .then(response => {
                 if (response.status === 200) {
 
@@ -218,7 +217,7 @@ class StockStatus extends React.Component {
     }
 
     getCountriesArray = () => {
-        axios.get(`${process.env.REACT_APP_DOMAIN}/api/v1/stock_status/getCountries/${this.state.market}`)
+        axios.get(`${process.env.REACT_APP_DOMAIN}/api/v1/best_practices/getCountries/${this.state.market}`)
             .then(response => {
                 if (response.status === 200) {
                     this.setState({
@@ -236,7 +235,7 @@ class StockStatus extends React.Component {
     }
 
     getPartnerType = () => {
-        axios.get(`${process.env.REACT_APP_DOMAIN}/api/v1/stock_status/getPartnerType/${this.state.market}/${this.state.country}`)
+        axios.get(`${process.env.REACT_APP_DOMAIN}/api/v1/best_practices/getPartnerType/${this.state.market}/${this.state.country}`)
             .then(response => {
                 if (response.status === 200) {
                     this.setState({
@@ -254,18 +253,19 @@ class StockStatus extends React.Component {
 
     }
 
-    getCategory = () => {
+    getSubCategory = () => {
         const data = {
             country: this.state.country,
             market: this.state.market,
             partnerType: this.state.partnerType,
+            category: this.state.category,
         }
-        axios.post(process.env.REACT_APP_DOMAIN + '/api/v1/stock_status/getCategories', data)
+        axios.post(process.env.REACT_APP_DOMAIN + '/api/v1/best_practices/getSubCategories', data)
             .then(response => {
                 if (response.status === 200) {
                     this.setState({
-                        categoryArray: [...response.data],
-                        categoryArrayReceive: true,
+                        subCategoryArray: [...response.data],
+                        subCategoryArrayReceive: true,
                     })
                 }
                 else {
@@ -277,19 +277,18 @@ class StockStatus extends React.Component {
             });
     }
 
-    getSubCategory = () => {
+    getCategory = () => {
         const data = {
             country: this.state.country,
             market: this.state.market,
             partnerType: this.state.partnerType,
-            category: this.state.category,
         }
-        axios.post(process.env.REACT_APP_DOMAIN + '/api/v1/stock_status/getSubCategories', data)
+        axios.post(process.env.REACT_APP_DOMAIN + '/api/v1/best_practices/getCategories', data)
             .then(response => {
                 if (response.status === 200) {
                     this.setState({
-                        subCategoryArray: [...response.data],
-                        subCategoryArrayReceive: true,
+                        categoryArray: [...response.data],
+                        categoryArrayReceive: true,
                     })
                 }
                 else {
@@ -319,9 +318,9 @@ class StockStatus extends React.Component {
                 subCategoryArrayReceive: false,
                 countryError: false,
                 partnerTypeError: false,
-                partnerNameError: false,
                 subCategoryError: false,
                 categoryError: false,
+                partnerNameError:false,
                 allFiltersFilled: false,
 
             }, () => { this.getCountriesArray() })
@@ -333,7 +332,7 @@ class StockStatus extends React.Component {
                 subCategory: '',
                 subCategoryArrayReceive: false,
                 subCategoryError: false,
-                partnerNameError: false,
+                partnerNameError:false,
                 allFiltersFilled: false,
             }, () => { this.getSubCategory() })
         }
@@ -341,7 +340,7 @@ class StockStatus extends React.Component {
         else if (id === "subCategory") {
             this.setState({
                 subCategory: value,
-                partnerNameError: false,
+                partnerNameError:false,
                 allFiltersFilled: true,
             })
         }
@@ -352,7 +351,6 @@ class StockStatus extends React.Component {
                 countryDuplicate: value,
                 partnerType: '',
                 partnerTypeError: false,
-                partnerNameError: false,
                 secondRowGap: -10,
                 subCategoryError: false,
                 categoryError: false,
@@ -360,7 +358,9 @@ class StockStatus extends React.Component {
                 subCategory: '',
                 categoryArrayReceive: false,
                 subCategoryArrayReceive: false,
+                partnerNameError:false,
                 allFiltersFilled: false,
+
             }, () => { this.getPartnerType() })
         }
 
@@ -369,12 +369,13 @@ class StockStatus extends React.Component {
                 partnerType: value,
                 subCategoryError: false,
                 categoryError: false,
-                partnerNameError: false,
                 category: '',
                 subCategory: '',
                 categoryArrayReceive: false,
                 subCategoryArrayReceive: false,
+                partnerNameError:false,
                 allFiltersFilled: false,
+
             }, () => { this.getCategory() })
         }
 
@@ -405,13 +406,13 @@ class StockStatus extends React.Component {
             countryError: false,
             scrapeDateError: false,
             partnerTypeError: false,
-            partnerNameError: false,
             subCategoryError: false,
             categoryError: false,
             countryArrayReceive: false,
             partnerTypeArrayReceive: false,
             subCategoryArrayReceive: false,
             categoryArrayReceive: false,
+            partnerNameError:false,
             allFiltersFilled: false,
         })
     }
@@ -445,7 +446,7 @@ class StockStatus extends React.Component {
             }
             let dataPacket = [];
             return new Promise((resolve, reject) => {
-                axios.post(process.env.REACT_APP_DOMAIN + '/api/v1/stock_status/screenshot', data)
+                axios.post(process.env.REACT_APP_DOMAIN + '/api/v1/best_practices/screenshot', data)
                     .then(response => {
                         console.log("res", response)
                         if (response.status === 200) {
@@ -459,7 +460,7 @@ class StockStatus extends React.Component {
                                         mpnModel: data.mpnModel,
                                         market: data.market,
                                         category: data.category,
-                                        subCategory: data.subCategory,
+                                        subCategory: data.subcategory,
                                         scrapeDate: data.scrapeDate,
                                         // scrapeStartDate: data.scrapeStartDate,
                                         // scrapeEndDate: data.scrapeEndDate,
@@ -556,19 +557,19 @@ class StockStatus extends React.Component {
         }
     }
 
-    checkErrorForCategory = () => {
-        if (this.state.market == '' || this.state.country == '' || this.state.partnerType == '') {
+    checkErrorForSubCategory = () => {
+        if (this.state.category == '') {
             this.setState({
-                categoryError: true,
+                subCategoryError: true,
                 secondRowGap: 8,
             })
         }
     }
 
-    checkErrorForSubCategory = () => {
-        if (this.state.category == '') {
+    checkErrorForCategory = () => {
+        if (this.state.market == '' || this.state.country == '' || this.state.partnerType == '') {
             this.setState({
-                subCategoryError: true,
+                categoryError: true,
                 secondRowGap: 8,
             })
         }
@@ -596,24 +597,25 @@ class StockStatus extends React.Component {
             partnerName: val,
         })
     }
-
-    fetchAccount = (value, callback) => {
+    
+     fetchAccount = (value, callback) => {
         this.setState({
             partnerNameError: true,
         })
-        axios.get(`${process.env.REACT_APP_DOMAIN}/api/v1/stock_status/getDistPartnerName/${this.state.market}/${this.state.country}/${this.state.partnerType}/${this.state.category}/${this.state.subCategory}/${value}`)
+        axios.get(`${process.env.REACT_APP_DOMAIN}/api/v1/best_practices/getDistPartnerName/${this.state.market}/${this.state.country}/${this.state.partnerType}/${this.state.category}/${this.state.subCategory}/${value}`)
             .then(response => {
                 const data = response.data;
                 callback(data);
             })
             .catch(err => err);
     }
+
     render() {
         return (
             <div style={{ marginLeft: "-7em" }}>
                 <Row>
                     <Col span={2}></Col>
-                    <label className="title1">STOCK STATUS FILTERS</label>
+                    <label className="title1">BEST PRACTICES FILTERS</label>
                     <Col span={16}></Col>
                     <Col><Button style={{ backgroundColor: "#0095d9", color: "white", marginLeft: "2em", marginTop: "-1em" }} onClick={this.showResult}>Search</Button></Col>
                     <Col style={{ marginTop: "-0.2em" }}><Tooltip placement="top" title="Refresh"><span style={{ color: "#0095d9", fontSize: "15px", cursor: "pointer", marginLeft: "1em" }} onClick={this.refresh}>Clear All</span></Tooltip></Col>
@@ -668,7 +670,7 @@ class StockStatus extends React.Component {
 
                 <Row style={{ marginTop: "-0.5em" }}>
                     <Col span={2}></Col>
-                    <label className="title1">STOCK STATUS LIST</label>
+                    <label className="title1">BEST PRACTICES LIST</label>
                 </Row>
                 <Row style={{ marginTop: "1em", marginBottom: 20 }}>
                     <Col span={2}></Col>
@@ -706,4 +708,4 @@ class StockStatus extends React.Component {
         )
     }
 }
-export default StockStatus;
+export default BestPractise;

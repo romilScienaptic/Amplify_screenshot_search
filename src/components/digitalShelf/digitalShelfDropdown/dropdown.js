@@ -25,16 +25,16 @@ class Dropdown extends React.Component {
     render() {
         if(this.props.data.length <=0){
               return(
-                <Select style={{ width: 160}}  defaultValue={this.props.defaultValue} style={{ width: 160}}  showSearch onChange={this.handleChange} placeholder={this.props.placeholder} value={this.state.val}>
+                <Select style={{ width: 190}}  defaultValue={this.props.defaultValue} style={{ width: 190}}  showSearch onChange={this.handleChange} placeholder={this.props.placeholder} value={this.state.val}>
                 {
-                     <Option style={{ width: 160, height:70, pointerEvents: "none"}}><Spin style={{ marginTop:25,marginLeft:"4em" }}/></Option>
+                     <Option style={{ width: 190, height:70, pointerEvents: "none"}}><Spin style={{ marginTop:25,marginLeft:"4em" }}/></Option>
                 }
            </Select>
               )
         }
         else{
         return (
-          <Select defaultValue={this.props.defaultValue} style={{ width: 160}}  showSearch onChange={this.handleChange} placeholder={this.props.placeholder} value={this.state.val}>
+          <Select defaultValue={this.props.defaultValue} style={{ width: 190}}  showSearch onChange={this.handleChange} placeholder={this.props.placeholder} value={this.state.val}>
                {
                    this.props.data.map((data,i)=>{
                        return(

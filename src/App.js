@@ -1,25 +1,24 @@
 import React from 'react';
+import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
 import "antd/dist/antd.css";
-import HPLogo from './assets/images/Hp.png';
-import { Row, Col } from 'antd';
-import { HashRouter as Router, Switch, Route } from 'react-router-dom';
-import Tab from './components/Tab/Tab';
 import axios from 'axios';
-import screenShot from './view/screenshot/screenshot';
+import { Row, Col } from 'antd';
+import HPLogo from './assets/images/Hp.png';
+import Tab from './components/Tab/Tab';
 
 class App extends React.Component {
-    constructor(props){
-      super(props);
-      this.state={
-        name:'',
-      }
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: '',
     }
+  }
   componentDidMount() {
-      axios.get(process.env.REACT_APP_DOMAIN + '/api/v1/username')
-      .then(response =>{
+    axios.get(process.env.REACT_APP_DOMAIN + '/api/v1/username')
+      .then(response => {
         this.setState({
-          name:response.data.name,
+          name: response.data.name,
         })
       })
       .catch(err => err);

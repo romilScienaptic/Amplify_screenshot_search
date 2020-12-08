@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import 'antd/dist/antd.css';
 import { Select, Spin, Input, Form,message } from 'antd';
 
 const { Option } = Select;
