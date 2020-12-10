@@ -107,13 +107,13 @@ class DigitalSelf extends React.Component {
                 // width: 80,
             },
             {
-                title: "keyword Category",
+                title: "Category",
                 dataIndex: 'keywordCategory',
                 key: 'keywordCategory',
                 // width: 80,
             },
             {
-                title: "Keyword SubCategory",
+                title: "Sub Category",
                 dataIndex: 'keywordSubcategory',
                 key: 'keywordSubcategory',
                 // width: 80,
@@ -635,7 +635,7 @@ class DigitalSelf extends React.Component {
                     <Col span={2}></Col>
                     <label className="title1">DIGITAL SHELF FILTERS</label>
                     <Col span={16}></Col>
-                    <Col style={{ marginLeft: "3em", marginTop: "-0.2em" }}><Button style={{ backgroundColor: "#0095d9", color: "white" }} onClick={this.showResult}>Search</Button></Col>
+                    <Col style={{ marginLeft: "2em", marginTop: "-0.2em" }}><Button style={{ backgroundColor: "#0095d9", color: "white" }} onClick={this.showResult}>Search</Button></Col>
                     <Col style={{ marginTop: "0em" }}><Tooltip placement="top" title="Refresh" ><span style={{ color: "#0095d9", fontSize: "15px", cursor: "pointer", marginLeft: "1em" }} onClick={this.refresh}>Clear All</span></Tooltip></Col>
                 </Row>
 
@@ -643,45 +643,45 @@ class DigitalSelf extends React.Component {
                     <Col span={2}></Col>
 
                     <Col style={{ marginTop: "-0.3em" }}><label className="title1" style={{ marginLeft: "0em" }}>Market<span className="mandatory-field">*</span></label></Col>
-                    <Col style={{ marginLeft: "2em" }}><DropDown placeholder={"Select market"} id="market" data={this.state.dataMarket1} select={this.select} value={this.state.market} /></Col>
+                    <Col style={{ marginLeft: "1.2em" }}><DropDown placeholder={"Select market"} id="market" data={this.state.dataMarket1} select={this.select} value={this.state.market} /></Col>
 
-                    <Col style={{ marginTop: "-0.3em" }}><label className="title1" style={{ marginLeft: "2em" }}>Country<span className="mandatory-field">*</span></label></Col>
-                    <Col style={{ marginLeft: "2.5em" }}><GetCountries placeholder={"Select country"} data={this.state.countryArray} id="country" countryArrayReceive={this.state.countryArrayReceive} error={this.state.countryError} checkErrorForCountry={this.checkErrorForCountry} select={this.select} value={this.state.country} /></Col>
+                    <Col style={{ marginTop: "-0.3em" }}><label className="title1" style={{ marginLeft: "1.5em" }}>Country<span className="mandatory-field">*</span></label></Col>
+                    <Col style={{ marginLeft: "2.8em" }}><GetCountries placeholder={"Select country"} data={this.state.countryArray} id="country" countryArrayReceive={this.state.countryArrayReceive} error={this.state.countryError} checkErrorForCountry={this.checkErrorForCountry} select={this.select} value={this.state.country} /></Col>
 
-                    <Col style={{ marginTop: "-0.3em" }}><label className="title1" style={{ marginLeft: "1.5em" }}>Partner Type<span className="mandatory-field">*</span></label></Col>
-                    <Col style={{ marginLeft: "0.8em" }}><GetPartnerType placeholder={"Select Partner Type"} data={this.state.partnerTypeArray} id="partnerType" partnerTypeArrayReceive={this.state.partnerTypeArrayReceive} error={this.state.partnerTypeError} checkErrorForPartnerType={this.checkErrorForPartnerType} select={this.select} value={this.state.partnerType} /></Col>
+                    <Col style={{ marginTop: "-0.3em" }}><label className="title1" style={{ marginLeft: "2em" }}>Partner Type<span className="mandatory-field">*</span></label></Col>
+                    <Col style={{ marginLeft: "0.6em" }}><GetPartnerType placeholder={"Select Partner Type"} data={this.state.partnerTypeArray} id="partnerType" partnerTypeArrayReceive={this.state.partnerTypeArrayReceive} error={this.state.partnerTypeError} checkErrorForPartnerType={this.checkErrorForPartnerType} select={this.select} value={this.state.partnerType} /></Col>
 
-                    <Col><label className="title1" style={{ marginLeft: "1.5em" }}>Partner Name</label></Col>
+                    <Col><label className="title1" style={{ marginLeft: "2.1em" }}>Partner</label></Col>
                     {/* <Col><Input className="filter-text" style={{ marginLeft: "1.2em", width: 215 }} placeholder="Select partner name" allowClear id="partnerName" onChange={this.text} value={this.state.partnerName} /></Col> */}
-                    <Col style={{ marginLeft: "1em" }}><GetPartnerName id="partnerName" placeholder={"Select Partner Name"} allowClear getPartnerNameValue={this.getPartnerNameValue} error={this.state.partnerNameError} allFiltersFilled={this.state.allFiltersFilled} checkErrorForPartnerName={this.checkErrorForPartnerName} fetchAccount={this.fetchAccount} value={this.state.partnerName} /></Col>
+                    <Col style={{ marginLeft: "3.5em" }}><GetPartnerName id="partnerName" placeholder={"Select Partner Name"} allowClear getPartnerNameValue={this.getPartnerNameValue} error={this.state.partnerNameError} allFiltersFilled={this.state.allFiltersFilled} checkErrorForPartnerName={this.checkErrorForPartnerName} fetchAccount={this.fetchAccount} value={this.state.partnerName} /></Col>
 
                     {/* <Col><label className="title1" style={{ marginLeft: "2em" }}>Master Partner Id</label></Col>
                     <Col ><Input className="filter-text" style={{ marginLeft: "2.8em", width: 160 }} allowClear id="masterPartnerId" placeholder="Select master partner id" onChange={this.text} value={this.state.masterPartnerId} /></Col> */}
                 </Row>
 
-                <Row style={{ marginTop: "1.2em" }}>
+                <Row style={{ marginTop: "1em" }}>
                     <Col span={2}></Col>
 
                     {/* <Col><label className="title1" style={{ marginLeft: "2.3em" }}>Detailed Partner Id</label></Col>
                     <Col ><Input className="filter-text" style={{ marginLeft: "0.7em", width: 160 }} allowClear id="detailedPartnerId" placeholder="Select detailed partner id" onChange={this.text} value={this.state.detailedPartnerId} /></Col> */}
 
-                    <Col span={2} style={{ marginTop: "-0.9em" }}><label className="title1" style={{ marginLeft: "0em" }}>Keyword Category</label></Col>
-                    <Col style={{ marginLeft: "-2.2em", width: 150, marginTop: -3 }}><GetCategory placeholder={"Select Keyword Category"} id="category" data={this.state.categoryArray}  categoryArrayReceive={this.state.categoryArrayReceive} error={this.state.categoryError} checkErrorForCategory={this.checkErrorForCategory} select={this.select} value={this.state.keywordCategory} /></Col>
+                    <Col ><label className="title1" style={{ marginLeft: "0em" }}> Category</label></Col>
+                    <Col style={{ marginLeft: "1em"}}><GetCategory placeholder={"Select Category"} id="category" data={this.state.categoryArray}  categoryArrayReceive={this.state.categoryArrayReceive} error={this.state.categoryError} checkErrorForCategory={this.checkErrorForCategory} select={this.select} value={this.state.keywordCategory} /></Col>
 
-                    <Col span={2} style={{ marginLeft: "4.8em", marginTop: "-0.9em" }}><label className="title1">Keyword SubCategory</label></Col>
-                    <Col style={{ marginLeft: "-1.2em", marginTop: -3 }}><GetSubCategory1 placeholder={"Select Keyword SubCategory"} id="subCategory" data={this.state.subCategoryArray} subCategoryArrayReceive={this.state.subCategoryArrayReceive} error={this.state.subCategoryError} checkErrorForSubCategory={this.checkErrorForSubCategory}  select={this.select} value={this.state.keywordSubcategory} /></Col>
+                    <Col><label className="title1"  style={{ marginLeft: "1.5em" }}> Sub Category</label></Col>
+                    <Col style={{ marginLeft: "1em" }}><GetSubCategory1 placeholder={"Select Sub Category"} id="subCategory" data={this.state.subCategoryArray} subCategoryArrayReceive={this.state.subCategoryArrayReceive} error={this.state.subCategoryError} checkErrorForSubCategory={this.checkErrorForSubCategory}  select={this.select} value={this.state.keywordSubcategory} /></Col>
 
-                    <Col><label className="title1" style={{ marginLeft: "1.5em" }}>Keyword Id</label></Col>
-                    <Col ><Input className="filter-text" style={{ marginLeft: "2.2em", width: 190 }} placeholder="Select keyword id" allowClear id="keywordId" onChange={this.text} value={this.state.keywordId} /></Col>
+                    <Col><label className="title1" style={{ marginLeft: "2em" }}>Keyword Id</label></Col>
+                    <Col style={{ marginTop: "0.1em" }}><Input className="filter-text" style={{ marginLeft: "1.9em", width: 190 }} placeholder="Select keyword id" allowClear id="keywordId" onChange={this.text} value={this.state.keywordId} /></Col>
 
-                    <Col style={{ marginTop: "-0.3em" }}><label className="title1" style={{ marginLeft: "1.5em" }}>Scrape Date<span className="mandatory-field">*</span></label></Col>
-                    <Col style={{ marginLeft: "1.3em", marginTop: -3 }}><DatePicker defaultVal={true} action={this.dateSelect} placeholder="Select Scrape Date" id={"scrape_date"} error={this.state.scrapeDateError} checkErrorForScrapeDate={this.checkErrorForScrapeDate} value={this.state.scrapeStartDate, this.state.scrapeEndDate} /></Col>
+                    <Col><label className="title1" style={{ marginLeft: "2.1em" }}>Scrape Date<span className="mandatory-field">*</span></label></Col>
+                    <Col style={{ marginLeft: "0.8em", marginTop: "-0.2em" }}><DatePicker defaultVal={true} action={this.dateSelect} placeholder="Select Scrape Date" id={"scrape_date"} error={this.state.scrapeDateError} checkErrorForScrapeDate={this.checkErrorForScrapeDate} value={this.state.scrapeStartDate, this.state.scrapeEndDate} /></Col>
 
                     {/* <Col span={2}><label className="title1" style={{marginLeft:"1.2em"}}>Keyword Text</label></Col>
                     <Col span={2}><Input className="filter-text" style={{marginLeft:"-0.5em"}} allowClear id="keywordText" onChange={this.text} value={this.state.keywordText} /></Col> */}
                 </Row>
 
-                <Row style={{ marginTop: "-1em" }}>
+                <Row style={{ marginTop: "-0.5em" }}>
                     <Col span={2}></Col>
                     <Col span={22}>
                         <Divider />

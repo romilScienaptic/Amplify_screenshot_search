@@ -631,9 +631,9 @@ class StockStatus extends React.Component {
                     <Col style={{ marginTop: "-0.3em" }}><label className="title1" style={{ marginLeft: "2em" }}>Partner Type<span className="mandatory-field">*</span></label></Col>
                     <Col style={{ marginLeft: "0.6em" }}><GetPartnerType placeholder={"Select Partner Type"} data={this.state.partnerTypeArray} id="partnerType" partnerTypeArrayReceive={this.state.partnerTypeArrayReceive} error={this.state.partnerTypeError} checkErrorForPartnerType={this.checkErrorForPartnerType} select={this.select} value={this.state.partnerType} /></Col>
 
-                    <Col><label className="title1" style={{ marginLeft: "2em" }}>Partner Name</label></Col>
+                    <Col><label className="title1" style={{ marginLeft: "2.1em" }}>Partner</label></Col>
                     {/* <Col><Input className="filter-text" style={{ marginLeft: "1em", width: 218 }} placeholder="Select partner name" allowClear id="partnerName" onChange={this.text} value={this.state.partnerName} /></Col> */}
-                    <Col style={{ marginLeft: "1em" }}><GetPartnerName id="partnerName" placeholder={"Select Partner Name"} allowClear getPartnerNameValue={this.getPartnerNameValue} error={this.state.partnerNameError} allFiltersFilled={this.state.allFiltersFilled} checkErrorForPartnerName={this.checkErrorForPartnerName} fetchAccount={this.fetchAccount} value={this.state.partnerName} /></Col>
+                    <Col style={{ marginLeft: "3.5em" }}><GetPartnerName id="partnerName" placeholder={"Select Partner Name"} allowClear getPartnerNameValue={this.getPartnerNameValue} error={this.state.partnerNameError} allFiltersFilled={this.state.allFiltersFilled} checkErrorForPartnerName={this.checkErrorForPartnerName} fetchAccount={this.fetchAccount} value={this.state.partnerName} /></Col>
 
                     {/* <Col span={2}><label className="title1" style={{marginLeft:"-0.5em"}} >Master Partner Id</label></Col>
                     <Col span={2}><Input className="filter-text" allowClear id="masterPartnerId" onChange={this.text} value={this.state.masterPartnerId} /></Col>
@@ -654,8 +654,8 @@ class StockStatus extends React.Component {
                     <Col><label className="title1" style={{ marginLeft: "2em" }}>MPN Model</label></Col>
                     <Col style={{ marginTop: "0.1em" }}><Input className="filter-text" style={{ marginLeft: "1.5em", width: 190 }} allowClear id="mpnModel" placeholder="Select MPN model" onChange={this.text} value={this.state.mpnModel} /></Col>
 
-                    <Col><label className="title1" style={{ marginLeft: "2em" }}>Scrape Date<span className="mandatory-field">*</span></label></Col>
-                    <Col style={{ marginLeft: "1.2em", marginTop: "-0.2em" }}><DatePicker defaultVal={true} action={this.dateSelect} placeholder="Select Scrape Date" id={"scrape_date"} error={this.state.scrapeDateError} checkErrorForScrapeDate={this.checkErrorForScrapeDate} value={this.state.scrapeStartDate, this.state.scrapeEndDate} /></Col>
+                    <Col><label className="title1" style={{ marginLeft: "2.1em" }}>Scrape Date<span className="mandatory-field">*</span></label></Col>
+                    <Col style={{ marginLeft: "0.8em", marginTop: "-0.2em" }}><DatePicker defaultVal={true} action={this.dateSelect} placeholder="Select Scrape Date" id={"scrape_date"} error={this.state.scrapeDateError} checkErrorForScrapeDate={this.checkErrorForScrapeDate} value={this.state.scrapeStartDate, this.state.scrapeEndDate} /></Col>
                 </Row>
 
                 <Row style={{ marginTop: "-0.5em" }}>
